@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-//import 'package:greengrocer/src/config/app_data.dart' as appData;
 import 'package:brasiltoon/src/config/custom_colors.dart';
-//import 'package:greengrocer/src/models/favorites_models.dart';
 import 'package:brasiltoon/src/pages/common_widgets/custom_shimmer.dart';
 import 'package:brasiltoon/src/pages/favorites/controller/favorietes_controller.dart';
 import 'package:brasiltoon/src/pages/favorites/view/components/favorites_tile.dart';
-import 'package:brasiltoon/src/pages/home/view/components/category_tile.dart';
-//import 'package:greengrocer/src/services/util_services.dart';
+import 'package:brasiltoon/src/pages/favorites/view/components/category_tile.dart';
 
 class FavoritesTab extends StatefulWidget {
   const FavoritesTab({super.key});

@@ -72,31 +72,28 @@ class PublisherController extends GetxController {
   }
 
   void filterByTitle() {
-    // Limpa os itens de todas as categorias
     for (var category in allCategories) {
       category.items.clear();
       category.pagination = 0;
     }
-
-    if (searchTitle.value.isNotEmpty) {
-      // Se a busca por título não estiver vazia, remova a categoria "todos" se existir
-      allCategories.removeWhere((cat) => cat.id == '');
-
-      // Cria uma nova categoria "todos" com base nos resultados da pesquisa
-      final allProductsCategory = CategoryModel(
-        title: 'todos',
-        id: '',
-        items: [],
-        pagination: 0,
-      );
-
-      // Adiciona a nova categoria "todos" no início da lista de categorias
-      allCategories.insert(0, allProductsCategory);
+    if (searchTitle.value.isEmpty) {
+      allCategories.removeAt(0);
     } else {
-      // Se a busca por título estiver vazia, remove a categoria "todos" se existir
-      allCategories.removeWhere((cat) => cat.id == '');
-    }
+      CategoryModel? c = allCategories.firstWhereOrNull((cat) => cat.id == '');
 
+      if (c == null) {
+        final allProductsCategory = CategoryModel(
+          title: 'todos',
+          id: '',
+          items: [],
+          pagination: 0,
+        );
+        allCategories.insert(0, allProductsCategory);
+      } else {
+        c.items.clear();
+        c.pagination = 0;
+      }
+    }
     currentCategory = allCategories.first;
     update();
     getPublishersItems();
@@ -114,6 +111,8 @@ class PublisherController extends GetxController {
     final result = await publishersRepository.getPublishersItems(
       token: authController.user.token!,
       userId: authController.user.id!,
+      page: currentCategory!.pagination,
+      itemPerPage: itemPerPage,
       categoryId: searchTitle.value.isNotEmpty ? null : currentCategory!.id,
       title: searchTitle.value.isNotEmpty ? searchTitle.value : null,
     );
@@ -122,7 +121,7 @@ class PublisherController extends GetxController {
 
     result.when(
       success: (data) {
-        items = data;
+        currentCategory!.items.addAll(data);
         update();
         // print(data);
       },

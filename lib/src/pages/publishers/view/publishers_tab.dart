@@ -126,24 +126,11 @@ class _PublishersTabState extends State<PublishersTab> {
           ),
           GetBuilder<PublisherController>(
             builder: (controller) {
-              if (controller.items.isEmpty) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.remove_circle_outline,
-                      size: 40,
-                      color: CustomColors.customSwatchColor,
-                    ),
-                    const Text(
-                        'Não a historias com essa categoria favoritada '),
-                  ],
-                );
-              }
               return Expanded(
                 child: !controller.isProductloading
                     ? Visibility(
-                        visible: controller.items.isNotEmpty,
+                        visible: (controller.currentCategory?.items ?? [])
+                            .isNotEmpty,
                         replacement: Column(
                           children: [
                             Icon(
@@ -164,16 +151,17 @@ class _PublishersTabState extends State<PublishersTab> {
                             crossAxisSpacing: 10,
                             childAspectRatio: 9 / 11.5,
                           ),
-                          itemCount: controller.items.length,
+                          itemCount: controller.allProducts.length,
                           itemBuilder: (_, index) {
-                            if ((index + 1) == controller.items.length) {
-                              if (((index + 1) == controller.items.length) &&
+                            if ((index + 1) == controller.allProducts.length) {
+                              if (((index + 1) ==
+                                      controller.allProducts.length) &&
                                   !controller.isLastPage) {
                                 controller.loadMoreProducts();
                               }
                             }
                             return PublishersTile(
-                              publishersItem: controller.items[index],
+                              publishersItem: controller.allProducts[index],
                             );
                           },
                         ),

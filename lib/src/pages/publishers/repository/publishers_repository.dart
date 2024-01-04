@@ -26,6 +26,8 @@ class PublisherRepository {
   }
 
   Future<PublishersResult<List<ItemModel>>> getPublishersItems({
+    required int itemPerPage,
+    required int page,
     required String token,
     required String userId,
     String? categoryId, // Adicionando categoryId como um parâmetro opcional
@@ -38,6 +40,8 @@ class PublisherRepository {
         'X-Parse-Session-Token': token,
       },
       body: {
+        'page': page,
+        'itemsPerPage': itemPerPage,
         'user': userId,
         'categoryId': categoryId, // Passando o categoryId, se disponível
         'title': title, // Passando o title, se disponível

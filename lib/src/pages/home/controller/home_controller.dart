@@ -1,3 +1,6 @@
+import 'package:brasiltoon/src/models/favorites_models.dart';
+import 'package:brasiltoon/src/pages/auth/controller/auth_controller.dart';
+import 'package:brasiltoon/src/pages/favorites/repository/favorites_repository.dart';
 import 'package:get/get.dart';
 import 'package:brasiltoon/src/models/category_model.dart';
 import 'package:brasiltoon/src/models/item_models.dart';
@@ -10,24 +13,30 @@ const int itemPerPage = 6;
 class HomeController extends GetxController {
   final utilsServices = UtilsServices();
   final homeRepository = HomeRepository();
-
-  bool isCategoryloading = false;
-  bool isProductloading = true;
+  final favoritesRepository = FavoritesRepository();
+  final authController = Get.find<AuthController>();
+  List<FavoritesItemModel> favoriteItems = [];
+  bool isCategoryLoading = false;
+  bool isProductLoading = true;
+  bool isChangingCategory = false;
   List<CategoryModel> allCategories = [];
   CategoryModel? currentCategory;
   List<ItemModel> get allProducts => currentCategory?.items ?? [];
   RxString searchTitle = ''.obs;
+
   bool get isLastPage {
     if (currentCategory!.items.length < itemPerPage) return true;
     return currentCategory!.pagination * itemPerPage > allProducts.length;
   }
 
-  void setLoading(bool value, {bool isProduct = false}) {
+  void setLoading(bool value,
+      {bool isProduct = false, bool changingCategory = false}) {
     if (!isProduct) {
-      isCategoryloading = value;
+      isCategoryLoading = value;
     } else {
-      isProductloading = value;
+      isProductLoading = value;
     }
+    isChangingCategory = changingCategory;
     update();
   }
 
@@ -43,9 +52,13 @@ class HomeController extends GetxController {
   }
 
   void selectCategory(CategoryModel category) {
+    // Marque como mudança de categoria
     currentCategory = category;
     update();
-    if (currentCategory!.items.isNotEmpty) return;
+    if (currentCategory!.items.isNotEmpty) {
+      // Marque como fim da mudança de categoria
+      return;
+    }
     getAllProducts();
   }
 
@@ -67,10 +80,11 @@ class HomeController extends GetxController {
         );
       },
     );
+    setLoading(false);
+    print('Start getAllCategory');
   }
 
   void filterByTitle() {
-    //apagar todas as historias da categoria
     for (var category in allCategories) {
       category.items.clear();
       category.pagination = 0;
@@ -81,7 +95,6 @@ class HomeController extends GetxController {
       CategoryModel? c = allCategories.firstWhereOrNull((cat) => cat.id == '');
 
       if (c == null) {
-        // criar nova categoria de todos
         final allProductsCategory = CategoryModel(
           title: 'todos',
           id: '',
@@ -132,5 +145,33 @@ class HomeController extends GetxController {
         );
       },
     );
+  }
+
+  Future<bool> isItemFavorite(ItemModel item) async {
+    // Verifica se o item está na lista de favoritos
+    final result = await favoritesRepository.getFavoritesItems(
+      /* page: currentCategory!.pagination,
+      itemPerPage: itemPerPage,*/
+      token: authController.user.token!,
+      userId: authController.user.id!,
+      categoryId: null,
+      title: null,
+    );
+
+    result.when(
+      success: (data) {
+        favoriteItems = data;
+        update();
+        // print(data);
+      },
+      error: (message) {
+        utilsServices.showToast(
+          message: message,
+          isError: true,
+        );
+      },
+    );
+
+    return favoriteItems.any((favoriteItem) => favoriteItem.item.id == item.id);
   }
 }

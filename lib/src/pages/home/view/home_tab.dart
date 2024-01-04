@@ -51,9 +51,6 @@ class _HomeTabState extends State<HomeTab> {
               return FutureBuilder<int>(
                 future: controller.getTotalFavoritesCount(),
                 builder: (context, snapshot) {
-                  /*  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator(); // ou outro indicador de carregamento
-                  } else*/
                   if (snapshot.hasError) {
                     return const Text('Erro ao obter a contagem de favoritos');
                   } else {
@@ -153,7 +150,7 @@ class _HomeTabState extends State<HomeTab> {
                 return Container(
                   padding: const EdgeInsets.only(left: 25),
                   height: 40,
-                  child: !controller.isCategoryloading
+                  child: !controller.isCategoryLoading
                       ? ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (_, index) {
@@ -192,7 +189,7 @@ class _HomeTabState extends State<HomeTab> {
             //grid
             GetBuilder<HomeController>(builder: (controller) {
               return Expanded(
-                child: !controller.isProductloading
+                child: !controller.isProductLoading
                     ? Visibility(
                         visible: (controller.currentCategory?.items ?? [])
                             .isNotEmpty,

@@ -13,6 +13,9 @@ class FavoritesController extends GetxController {
   final utilsServices = UtilsServices();
   final favoritesRepository = FavoritesRepository();
   bool isCategoryloading = false;
+  bool isCheckingInitialFavorites =
+      true; // Adicione esta variável para rastrear o estado de checagem inicial
+
   bool isProductloading = true;
   List<CategoryModel> allCategories = [];
   CategoryModel? currentCategory;
@@ -43,6 +46,18 @@ class FavoritesController extends GetxController {
       time: const Duration(milliseconds: 600),
     );
     getAllCategory();
+    checkInitialFavorites();
+  }
+
+  Future<void> checkInitialFavorites() async {
+    isCheckingInitialFavorites = true;
+    update();
+
+    // Lógica para verificar os favoritos iniciais
+    await getFavoritesItems(canLoad: false);
+
+    isCheckingInitialFavorites = false;
+    update();
   }
 
   void selectCategory(CategoryModel category) {
@@ -72,40 +87,39 @@ class FavoritesController extends GetxController {
     );
   }
 
+  void loadMoreProducts() {
+    currentCategory!.pagination++;
+    getFavoritesItems(canLoad: false);
+  }
+
   void filterByTitle() {
-    // Limpa os itens de todas as categorias
+    //apagar todas as historias da categoria
     for (var category in allCategories) {
       category.items.clear();
       category.pagination = 0;
     }
-
-    if (searchTitle.value.isNotEmpty) {
-      // Se a busca por título não estiver vazia, remova a categoria "todos" se existir
-      allCategories.removeWhere((cat) => cat.id == '');
-
-      // Cria uma nova categoria "todos" com base nos resultados da pesquisa
-      final allProductsCategory = CategoryModel(
-        title: 'todos',
-        id: '',
-        items: [],
-        pagination: 0,
-      );
-
-      // Adiciona a nova categoria "todos" no início da lista de categorias
-      allCategories.insert(0, allProductsCategory);
+    if (searchTitle.value.isEmpty) {
+      allCategories.removeAt(0);
     } else {
-      // Se a busca por título estiver vazia, remove a categoria "todos" se existir
-      allCategories.removeWhere((cat) => cat.id == '');
-    }
+      CategoryModel? c = allCategories.firstWhereOrNull((cat) => cat.id == '');
 
-    currentCategory = allCategories.first;
+      if (c == null) {
+        // criar nova categoria de todos
+        final allProductsCategory = CategoryModel(
+          title: 'todos',
+          id: '',
+          items: [],
+          pagination: 0,
+        );
+        allCategories.insert(0, allProductsCategory);
+      } else {
+        c.items.clear();
+        c.pagination = 0;
+      }
+    }
+    currentCategory = currentCategory;
     update();
     getFavoritesItems();
-  }
-
-  void loadMoreProducts() {
-    currentCategory!.pagination++;
-    getFavoritesItems(canLoad: false);
   }
 
   //remove a historia de meus favoritos
@@ -138,6 +152,8 @@ class FavoritesController extends GetxController {
       setLoading(true, isProduct: true);
     }
     final result = await favoritesRepository.getFavoritesItems(
+      /* page: currentCategory!.pagination,
+      itemPerPage: itemPerPage,*/
       token: authController.user.token!,
       userId: authController.user.id!,
       categoryId: searchTitle.value.isNotEmpty ? null : currentCategory!.id,
@@ -161,11 +177,6 @@ class FavoritesController extends GetxController {
     );
   }
 
-  bool isItemFavorite(ItemModel item) {
-    // Verifica se o item está na lista de favoritos
-    return favoriteItems.any((favoriteItem) => favoriteItem.item == item);
-  }
-
   Future<void> addItemToFavorites({required ItemModel item}) async {
     final FavoritesResult<String> result =
         await favoritesRepository.addItemToFavorites(
@@ -179,6 +190,7 @@ class FavoritesController extends GetxController {
         FavoritesItemModel(
           id: favoriteItemId,
           item: item,
+          //  pagination: 0,
         ),
       );
     }, error: (message) {
@@ -215,9 +227,11 @@ class FavoritesController extends GetxController {
     String? title,
   }) async {
     final result = await favoritesRepository.getFavoritesItems(
+      /* page: 0,
+      itemPerPage: 100,*/
       token: authController.user.token!,
       userId: authController.user.id!,
-      categoryId: categoryId,
+      categoryId: null,
       title: title,
     );
 

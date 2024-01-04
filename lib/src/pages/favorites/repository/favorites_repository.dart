@@ -28,6 +28,8 @@ class FavoritesRepository {
   Future<FavoritesResult<List<FavoritesItemModel>>> getFavoritesItems({
     required String token,
     required String userId,
+    /* required int itemPerPage,
+    required int page,*/
     String? categoryId, // Adicionando categoryId como um parâmetro opcional
     String? title, // Adicionando title como um parâmetro opcional
   }) async {
@@ -38,6 +40,8 @@ class FavoritesRepository {
         'X-Parse-Session-Token': token,
       },
       body: {
+        /*'page': page,
+        'itemsPerPage': itemPerPage,*/
         'user': userId,
         'categoryId': categoryId, // Passando o categoryId, se disponível
         'title': title, // Passando o title, se disponível
