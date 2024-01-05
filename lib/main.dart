@@ -1,3 +1,5 @@
+import 'package:brasiltoon/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:brasiltoon/src/pages/auth/controller/auth_controller.dart';
 //import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -6,10 +8,18 @@ import 'package:brasiltoon/src/pages/auth/controller/auth_controller.dart';
 import 'package:brasiltoon/src/pages_routes/pages_routes.dart';
 import 'package:get/get.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Get.put(AuthController());
-  runApp(const MyApp());
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    runApp(const MyApp());
+  } catch (e) {
+    print('Erro durante a inicialização do Firebase: $e');
+  }
 }
 
 class MyApp extends StatelessWidget {

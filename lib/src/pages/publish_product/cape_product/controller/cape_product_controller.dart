@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:brasiltoon/src/models/category_model.dart';
 import 'package:brasiltoon/src/pages/auth/controller/auth_controller.dart';
@@ -89,7 +89,7 @@ class CapeProductController extends GetxController {
     }
   }
 
-  Future<String> saveImageToAppDirectory(File image) async {
+  /* Future<String> saveImageToAppDirectory(File image) async {
     try {
       // Obtém o diretório de documentos do aplicativo
       // Directory appDocDir =   await getApplicationDocumentsDirectory();
@@ -120,6 +120,31 @@ class CapeProductController extends GetxController {
           isError: true,
         );
       };
+      // Lida com erros durante o upload
+      print('Erro durante o upload da imagem: $e');
+      return '';
+    }
+  }*/
+  Future<String> saveImageToAppDirectory(File image) async {
+    try {
+      // Gera um nome de arquivo único para a imagem usando UUID
+      String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+      String imageName = '$uniqueFileName.png';
+
+      // Referência ao caminho no Firebase Storage
+      Reference storageReference =
+          FirebaseStorage.instance.ref().child('images/$imageName');
+
+      // Envia o arquivo para o Firebase Storage
+      await storageReference.putFile(image);
+
+      // Obtém o URL do arquivo recém-enviado
+      String imagePath = await storageReference.getDownloadURL();
+
+      // Retorna o URL completo da imagem
+      print(imagePath);
+      return imagePath;
+    } catch (e) {
       // Lida com erros durante o upload
       print('Erro durante o upload da imagem: $e');
       return '';

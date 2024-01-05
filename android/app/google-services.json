@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "799710342273",
+    "project_id": "brasiltoon-5983e",
+    "storage_bucket": "brasiltoon-5983e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799710342273:android:e22fbd28f785fa10f3f180",
+        "android_client_info": {
+          "package_name": "com.example.brasiltoon"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8HSzQwpAKHOMdckA-cGVIKCyUu6Ce1hU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
