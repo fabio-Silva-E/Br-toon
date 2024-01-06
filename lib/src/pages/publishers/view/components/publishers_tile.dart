@@ -47,7 +47,7 @@ class _PublishersTileState extends State<PublishersTile> {
                   GetBuilder<PublisherController>(
                     builder: (controller) {
                       return Expanded(
-                        child: Image.asset(
+                        child: Image.network(
                           widget.publishersItem.imgUrl,
                           //  key: imageGk,
                         ),

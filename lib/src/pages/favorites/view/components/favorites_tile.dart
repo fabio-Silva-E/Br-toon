@@ -47,7 +47,7 @@ class _FavoritesTileState extends State<FavoritesTile> {
                   //capat
                   GetBuilder<FavoritesController>(builder: (controller) {
                     return Expanded(
-                      child: Image.asset(
+                      child: Image.network(
                         widget.favoritesItem.item.imgUrl,
                       ),
                     );

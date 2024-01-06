@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:brasiltoon/src/pages/auth/controller/auth_controller.dart';
 import 'package:brasiltoon/src/pages/publish_product/chapters_product/repository/publish_chapter_repository.dart';
@@ -46,35 +47,26 @@ class PublishChapterController extends GetxController {
 
   Future<String> saveImageToAppDirectory(File image) async {
     try {
-      // Obtém o diretório de documentos do aplicativo
-      // Directory appDocDir =   await getApplicationDocumentsDirectory();
-
-      // Concatena o caminho desejado para o diretório de imagens
-      String imagesDirectoryPath = 'assets/manga'; //'${appDocDir.path}/images';
-
-      // Verifica se o diretório de imagens existe, senão cria
-      Directory imagesDirectory = Directory(imagesDirectoryPath);
-      if (!await imagesDirectory.exists()) {
-        await imagesDirectory.create(recursive: true);
-      }
-
-      // Gera um nome de arquivo único para a imagem
+      // Gera um nome de arquivo único para a imagem usando UUID
       String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
-      String imagePath = '$imagesDirectoryPath/$uniqueFileName.png';
+      String imageName = '$uniqueFileName.png';
 
-      // Copia o arquivo da imagem para o caminho desejado
-      await image.copy(imagePath);
+      // Referência ao caminho no Firebase Storage
+      Reference storageReference =
+          FirebaseStorage.instance.ref().child('images/$imageName');
 
-      // Retorna o caminho completo da imagem
+      // Envia o arquivo para o Firebase Storage
+      await storageReference.putFile(image);
+
+      // Obtém o URL do arquivo recém-enviado
+      String imagePath = await storageReference.getDownloadURL();
+
+      // Retorna o URL completo da imagem
       print(imagePath);
       return imagePath;
     } catch (e) {
-      (message) {
-        utilsServices.showToast(
-          message: 'Erro durante o upload da imagem: $e',
-          isError: true,
-        );
-      };
+      // Lida com erros durante o upload
+      print('Erro durante o upload da imagem: $e');
       return '';
     }
   }

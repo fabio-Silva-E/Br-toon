@@ -36,7 +36,7 @@ class ProductScreen extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Image.asset(
+                      child: Image.network(
                         pageUrl,
                         fit: BoxFit.cover,
                       ),

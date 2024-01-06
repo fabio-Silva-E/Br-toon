@@ -64,7 +64,7 @@ class _ProductChapterState extends State<ProductChapter> {
                           fontSize: 16.0,
                         ),
                       ),
-                      Image.asset(
+                      Image.network(
                         chapter.chaptersUrls,
                         fit: BoxFit.cover,
                       ),

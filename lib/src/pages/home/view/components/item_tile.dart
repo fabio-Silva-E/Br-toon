@@ -103,7 +103,7 @@ class _ItemTileState extends State<ItemTile> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(
-                    child: Image.asset(
+                    child: Image.network(
                       widget.item.imgUrl,
                       key: imageGk,
                     ),
