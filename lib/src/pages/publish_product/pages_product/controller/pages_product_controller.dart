@@ -10,6 +10,7 @@ import 'package:brasiltoon/src/services/util_services.dart';
 class PublishPageController extends GetxController {
   final utilsServices = UtilsServices();
   final String chapterId;
+  RxBool isloading = false.obs;
   final authController = Get.find<AuthController>();
 
   PublishPageController({required this.chapterId});
@@ -18,12 +19,14 @@ class PublishPageController extends GetxController {
     required String page,
     required String chapterId,
   }) async {
+    isloading.value = true;
     final PageResult<String> result = await pageRepository.publishPages(
       token: authController.user.token!,
       userId: authController.user.id!,
       page: page,
       chapterId: chapterId,
     );
+    isloading.value = false;
     print('chapter ID: $chapterId');
     result.when(success: (pageId) {
       pageId;
@@ -61,6 +64,10 @@ class PublishPageController extends GetxController {
       return imagePath;
     } catch (e) {
       // Lida com erros durante o upload
+      utilsServices.showToast(
+        message: 'Erro durante o upload da imagem: $e',
+        isError: true,
+      );
       print('Erro durante o upload da imagem: $e');
       return '';
     }

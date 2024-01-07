@@ -186,18 +186,21 @@ class _PublishersTabState extends State<PublishersTab> {
             },
           ),
           //publicar historia
-          GestureDetector(
-            onTap: () {
-              Get.to(() => const PublishProductTab());
-            },
-            // Navegação para a página PublishProduct
+          SizedBox(
+            height: 50,
+            child: ElevatedButton(
+              onPressed: () {
+                Get.to(() => const PublishProductTab());
+              },
+              // Navegação para a página PublishProduct
 
-            child: const Text(
-              'Publicar Historia',
-              style: TextStyle(
-                color: Colors.blue,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+              child: const Text(
+                'Publicar Historia',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),

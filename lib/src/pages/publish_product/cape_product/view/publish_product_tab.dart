@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:brasiltoon/src/pages/publish_product/cape_product/controller/cape_product_controller.dart';
@@ -8,12 +9,25 @@ import 'package:image_picker/image_picker.dart';
 
 class PublishProductTab extends StatefulWidget {
   const PublishProductTab({Key? key}) : super(key: key);
-
   @override
   State<PublishProductTab> createState() => _PublishProductTabState();
 }
 
 class _PublishProductTabState extends State<PublishProductTab> {
+  Widget getImageWidget() {
+    if (capa != null) {
+      if (kIsWeb) {
+        return Image.network(capa!.path); // Se for web, usa Image.network
+      } else {
+        return Image.file(
+            File(capa!.path)); // Para outras plataformas, usa Image.file
+      }
+    } else {
+      return const SizedBox
+          .shrink(); // Se não houver imagem, retorna um Widget vazio
+    }
+  }
+
   final UtilsServices ultilsServices = UtilsServices();
   XFile? capa;
   final capeProductController = Get.find<CapeProductController>();
@@ -42,7 +56,7 @@ class _PublishProductTabState extends State<PublishProductTab> {
                 leading: const Icon(Icons.attach_file),
                 title: const Text(' capa'),
                 onTap: () => uploadImage(),
-                trailing: capa != null ? Image.file(File(capa!.path)) : null,
+                trailing: getImageWidget(),
               ),
               buildTextField(
                 controller: descriptionController,

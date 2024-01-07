@@ -56,37 +56,30 @@ class CapeProductController extends GetxController {
     required String description,
     required String category,
   }) async {
-    try {
-      isloading.value = true;
+    isloading.value = true;
 
-      final CapeProductResult<String> result =
-          await capeProductRepository.publishCape(
-        token: authController.user.token!,
-        userId: authController.user.id!,
-        title: title,
-        cape: cape,
-        description: description,
-        category: category,
+    final CapeProductResult<String> result =
+        await capeProductRepository.publishCape(
+      token: authController.user.token!,
+      userId: authController.user.id!,
+      title: title,
+      cape: cape,
+      description: description,
+      category: category,
+    );
+    isloading.value = false;
+    result.when(success: (productId) {
+      // Se a operação foi bem-sucedida, você pode prosseguir com outras ações
+      productId;
+      update();
+      Get.to(() => PublishChapterTab(productId: productId));
+      print('Success! Product ID: $productId');
+    }, error: (message) {
+      utilsServices.showToast(
+        message: message,
+        isError: true,
       );
-
-      result.when(success: (productId) {
-        // Se a operação foi bem-sucedida, você pode prosseguir com outras ações
-        productId;
-        update();
-        Get.to(() => PublishChapterTab(productId: productId));
-        print('Success! Product ID: $productId');
-      }, error: (message) {
-        utilsServices.showToast(
-          message: message,
-          isError: true,
-        );
-      });
-    } catch (e) {
-      // Lidar com erros, se necessário
-    } finally {
-      isloading.value =
-          false; // Garante que isloading seja sempre definido como false
-    }
+    });
   }
 
   /* Future<String> saveImageToAppDirectory(File image) async {
@@ -146,6 +139,10 @@ class CapeProductController extends GetxController {
       return imagePath;
     } catch (e) {
       // Lida com erros durante o upload
+      utilsServices.showToast(
+        message: 'Erro durante o upload da imagem: $e',
+        isError: true,
+      );
       print('Erro durante o upload da imagem: $e');
       return '';
     }

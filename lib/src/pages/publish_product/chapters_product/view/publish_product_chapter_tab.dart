@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:brasiltoon/src/pages/publish_product/chapters_product/controller/publish_chapter_controller.dart';
@@ -18,6 +19,20 @@ class PublishChapterTab extends StatefulWidget {
 }
 
 class _PublishChapterTabState extends State<PublishChapterTab> {
+  Widget getImageWidget() {
+    if (capa != null) {
+      if (kIsWeb) {
+        return Image.network(capa!.path); // Se for web, usa Image.network
+      } else {
+        return Image.file(
+            File(capa!.path)); // Para outras plataformas, usa Image.file
+      }
+    } else {
+      return const SizedBox
+          .shrink(); // Se não houver imagem, retorna um Widget vazio
+    }
+  }
+
   final UtilsServices utilsServices = UtilsServices();
   XFile? capa;
   final chapterController = Get.find<PublishChapterController>();
@@ -44,32 +59,37 @@ class _PublishChapterTabState extends State<PublishChapterTab> {
                 leading: const Icon(Icons.attach_file),
                 title: const Text(' capa'),
                 onTap: () => uploadImage(),
-                trailing: capa != null ? Image.file(File(capa!.path)) : null,
+                trailing: getImageWidget(),
               ),
               ElevatedButton(
-                onPressed: () async {
-                  FocusScope.of(context).unfocus();
-                  // Verificar se todos os campos obrigatórios estão preenchidos
-                  if (capa != null && titleController.text.isNotEmpty) {
-                    // Realizar o upload da capa e publicar
-                    String imagePath = await chapterController
-                        .saveImageToAppDirectory(File(capa!.path));
+                onPressed: chapterController.isloading.value
+                    ? null
+                    : () async {
+                        FocusScope.of(context).unfocus();
+                        // Verificar se todos os campos obrigatórios estão preenchidos
+                        if (capa != null && titleController.text.isNotEmpty) {
+                          // Realizar o upload da capa e publicar
+                          String imagePath = await chapterController
+                              .saveImageToAppDirectory(File(capa!.path));
 
-                    chapterController.publishChapter(
-                      title: titleController.text,
-                      cape: imagePath,
-                      productId: widget.productId,
-                    );
-                  } else {
-                    print('Preencha todos os campos antes de publicar.');
-                    // Mostrar mensagem de erro se algum campo estiver vazio
-                    utilsServices.showToast(
-                      message: 'Preencha todos os campos antes de publicar.',
-                      isError: true,
-                    );
-                  }
-                },
-                child: const Text('Publicar Capitulo'),
+                          chapterController.publishChapter(
+                            title: titleController.text,
+                            cape: imagePath,
+                            productId: widget.productId,
+                          );
+                        } else {
+                          print('Preencha todos os campos antes de publicar.');
+                          // Mostrar mensagem de erro se algum campo estiver vazio
+                          utilsServices.showToast(
+                            message:
+                                'Preencha todos os campos antes de publicar.',
+                            isError: true,
+                          );
+                        }
+                      },
+                child: chapterController.isloading.value
+                    ? const CircularProgressIndicator()
+                    : const Text('Publicar Capitulo'),
               ),
             ],
           ),
