@@ -50,7 +50,7 @@ class CapeProductController extends GetxController {
     );
   }
 
-  Future<void> publishCape({
+  Future<void> publishCover({
     required String title,
     required String cape,
     required String description,
@@ -59,7 +59,7 @@ class CapeProductController extends GetxController {
     isloading.value = true;
 
     final CapeProductResult<String> result =
-        await capeProductRepository.publishCape(
+        await capeProductRepository.publishCover(
       token: authController.user.token!,
       userId: authController.user.id!,
       title: title,

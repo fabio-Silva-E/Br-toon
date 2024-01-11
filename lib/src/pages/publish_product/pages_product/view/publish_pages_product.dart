@@ -68,36 +68,41 @@ class _PublishPageTabState extends State<PublishPageTab> {
                 onTap: () => uploadImage(),
                 trailing: getImageWidget(),
               ),
-              ElevatedButton(
-                onPressed: pageController.isloading.value
-                    ? null
-                    : () async {
-                        FocusScope.of(context).unfocus();
-                        // Verificar se todos os campos obrigatórios estão preenchidos
-                        if (pagina != null) {
-                          // Realizar o upload da capa e publicar
-                          String imagePath = await pageController
-                              .saveImageToAppDirectory(File(pagina!.path));
-                          setState(() {
-                            pageCount++;
-                          });
-                          pageController.publishPages(
-                            page: imagePath,
-                            chapterId: widget.chapterId,
-                          );
-                        } else {
-                          print('Preencha todos os campos antes de publicar.');
-                          // Mostrar mensagem de erro se algum campo estiver vazio
-                          utilsServices.showToast(
-                            message:
-                                'Preencha todos os campos antes de publicar.',
-                            isError: true,
-                          );
-                        }
-                      },
-                child: pageController.isloading.value
-                    ? const CircularProgressIndicator()
-                    : Text('Publicar página $pageCount'),
+              SizedBox(
+                height: 45,
+                child: Obx(() => ElevatedButton(
+                      onPressed: pageController.isloading.value
+                          ? null
+                          : () async {
+                              FocusScope.of(context).unfocus();
+                              // Verificar se todos os campos obrigatórios estão preenchidos
+                              if (pagina != null) {
+                                // Realizar o upload da capa e publicar
+                                String imagePath = await pageController
+                                    .saveImageToAppDirectory(
+                                        File(pagina!.path));
+                                setState(() {
+                                  pageCount++;
+                                });
+                                pageController.publishPages(
+                                  page: imagePath,
+                                  chapterId: widget.chapterId,
+                                );
+                              } else {
+                                print(
+                                    'Preencha todos os campos antes de publicar.');
+                                // Mostrar mensagem de erro se algum campo estiver vazio
+                                utilsServices.showToast(
+                                  message:
+                                      'Preencha todos os campos antes de publicar.',
+                                  isError: true,
+                                );
+                              }
+                            },
+                      child: pageController.isloading.value
+                          ? const CircularProgressIndicator()
+                          : Text('Publicar página $pageCount'),
+                    )),
               ),
               TextButton(
                 onPressed: () {

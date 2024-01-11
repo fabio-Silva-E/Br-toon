@@ -14,7 +14,8 @@ abstract class Endpoints {
   static const String removeItemToFavorites = '$baseurl/unfavorite-item';
   static const String changPassword = '$baseurl/change-password';
   static const String getPublishersItems = '$baseurl/get-publish-items';
-  static const String publishCape = '$baseurl/publish-cape-historie';
+  static const String publishCape = '$baseurl/publish-cape-story';
   static const String publishChapter = '$baseurl/publish-cape-chapter';
   static const String publishPages = '$baseurl/publish-pages-chapter';
+  static const String modifyCoverStory = '$baseurl/modify-cover-story';
 }

@@ -1,4 +1,7 @@
+import 'package:brasiltoon/src/config/custom_colors.dart';
+import 'package:brasiltoon/src/pages/story_editing/edit_screen/editi_cover_tab.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phosphor_icons/flutter_phosphor_icons.dart';
 import 'package:get/get.dart';
 import 'package:brasiltoon/src/models/item_models.dart';
 import 'package:brasiltoon/src/pages/publishers/controller/publishers_contoller.dart';
@@ -69,22 +72,17 @@ class _PublishersTileState extends State<PublishersTile> {
           ),
         ),
         //botão editar
-        /* Positioned(
+        Positioned(
           top: 4,
           right: 4,
           child: GestureDetector(
-            onTap: () async {
-              // Mostra a caixa de diálogo de confirmação
-              bool? confirmation = await showOrderComfirmation();
-              if (confirmation == true) {
-                // Chama a função remove apenas se a confirmação for verdadeira
-                setState(() {
-                  widget.remove(widget.favoritesItem);
-                  ultilsServices.showToast(
-                      message:
-                          ' ${widget.favoritesItem.item.itemName}removida de seus favoritos');
-                });
-              }
+            onTap: () {
+              Get.to(() => EditingCapeTab(
+                    productId:
+                        widget.publishersItem.id, // Passa o ID do produto
+                    item: widget.publishersItem,
+                    category: controller.currentCategory!.id,
+                  ));
             },
             child: Container(
               height: 40,
@@ -97,18 +95,18 @@ class _PublishersTileState extends State<PublishersTile> {
                 ),
               ),
               child: const Icon(
-                Icons.delete_forever,
+                PhosphorIcons.pencil,
                 color: Colors.white,
                 size: 20,
               ),
             ),
           ),
-        ),*/ // OBS CRIAR UMA FUNÇÃO PARA EDIÇÃO DA HISTORIA
+        ), // OBS CRIAR UMA FUNÇÃO PARA EDIÇÃO DA HISTORIA
       ],
     );
   }
 
-  Future<bool?> showOrderComfirmation() {
+  /* Future<bool?> showOrderComfirmation() {
     return showDialog<bool>(
       context: context,
       builder: (context) {
@@ -140,5 +138,5 @@ class _PublishersTileState extends State<PublishersTile> {
         );
       },
     );
-  }
+  }*/
 }

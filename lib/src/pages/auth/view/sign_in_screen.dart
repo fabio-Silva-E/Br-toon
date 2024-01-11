@@ -103,7 +103,7 @@ class SignInScreen extends StatelessWidget {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(18)),
                               ),
-                              onPressed: authcontroller.isloading.value
+                              onPressed: authcontroller.isLoading.value
                                   ? null
                                   : () {
                                       FocusScope.of(context).unfocus();
@@ -116,7 +116,7 @@ class SignInScreen extends StatelessWidget {
                                             email: email, password: password);
                                       }
                                     },
-                              child: authcontroller.isloading.value
+                              child: authcontroller.isLoading.value
                                   ? const CircularProgressIndicator()
                                   : const Text(
                                       'Entrar',

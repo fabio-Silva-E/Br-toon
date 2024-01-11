@@ -64,38 +64,41 @@ class _PublishProductTabState extends State<PublishProductTab> {
               ),
               buildCategoryDropdown(),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: capeProductController.isloading.value
-                    ? null
-                    : () async {
-                        FocusScope.of(context).unfocus();
-                        // Verificar se todos os campos obrigatórios estão preenchidos
-                        if (capa != null &&
-                            titleController.text.isNotEmpty &&
-                            descriptionController.text.isNotEmpty &&
-                            categoryController.text.isNotEmpty) {
-                          // Realizar o upload da capa e publicar
-                          String imagePath = await capeProductController
-                              .saveImageToAppDirectory(File(capa!.path));
+              SizedBox(
+                height: 45,
+                child: Obx(() => ElevatedButton(
+                      onPressed: capeProductController.isloading.value
+                          ? null
+                          : () async {
+                              FocusScope.of(context).unfocus();
+                              // Verificar se todos os campos obrigatórios estão preenchidos
+                              if (capa != null &&
+                                  titleController.text.isNotEmpty &&
+                                  descriptionController.text.isNotEmpty &&
+                                  categoryController.text.isNotEmpty) {
+                                // Realizar o upload da capa e publicar
+                                String imagePath = await capeProductController
+                                    .saveImageToAppDirectory(File(capa!.path));
 
-                          capeProductController.publishCape(
-                            title: titleController.text,
-                            cape: imagePath,
-                            description: descriptionController.text,
-                            category: categoryController.text,
-                          );
-                        } else {
-                          // Mostrar mensagem de erro se algum campo estiver vazio
-                          ultilsServices.showToast(
-                            message:
-                                'Preencha todos os campos antes de publicar.',
-                            isError: true,
-                          );
-                        }
-                      },
-                child: capeProductController.isloading.value
-                    ? const CircularProgressIndicator()
-                    : const Text('Publicar Capa'),
+                                capeProductController.publishCover(
+                                  title: titleController.text,
+                                  cape: imagePath,
+                                  description: descriptionController.text,
+                                  category: categoryController.text,
+                                );
+                              } else {
+                                // Mostrar mensagem de erro se algum campo estiver vazio
+                                ultilsServices.showToast(
+                                  message:
+                                      'Preencha todos os campos antes de publicar.',
+                                  isError: true,
+                                );
+                              }
+                            },
+                      child: capeProductController.isloading.value
+                          ? const CircularProgressIndicator()
+                          : const Text('Publicar Capa'),
+                    )),
               ),
             ],
           ),

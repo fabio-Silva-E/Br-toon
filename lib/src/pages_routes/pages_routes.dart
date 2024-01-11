@@ -3,6 +3,7 @@ import 'package:brasiltoon/src/pages/auth/view/sign_up_screen.dart';
 import 'package:brasiltoon/src/pages/base/base_screen.dart';
 import 'package:brasiltoon/src/pages/base/binding/navigation_binding.dart';
 import 'package:brasiltoon/src/pages/favorites/binding/favorites_binding.dart';
+import 'package:brasiltoon/src/pages/story_editing/binding/editing_binding.dart';
 import 'package:brasiltoon/src/pages/home/binding/home_binding.dart';
 import 'package:brasiltoon/src/pages/publish_product/cape_product/binding/cape_product_binding.dart';
 import 'package:brasiltoon/src/pages/publish_product/chapters_product/binding/publish_chapter_binding.dart';
@@ -24,7 +25,7 @@ abstract class AppPages {
       name: PagesRoutes.signInRoute,
     ),
     GetPage(
-      page: () => SignUpScreen(),
+      page: () => const SignUpScreen(),
       name: PagesRoutes.signUpRoute,
     ),
     GetPage(
@@ -40,6 +41,7 @@ abstract class AppPages {
         CapeProductBinding(),
         ChapterBinding(),
         PagesBinding(),
+        EditingBinding(),
       ],
     ),
   ];

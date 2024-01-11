@@ -1,27 +1,65 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_phosphor_icons/flutter_phosphor_icons.dart';
 import 'package:get/get.dart';
 import 'package:brasiltoon/src/pages/auth/controller/auth_controller.dart';
 import 'package:brasiltoon/src/pages/common_widgets/custom_text_field.dart';
 import 'package:brasiltoon/src/config/custom_colors.dart';
 import 'package:brasiltoon/src/services/validator.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
-class SignUpScreen extends StatelessWidget {
-  SignUpScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final imagePicker = ImagePicker();
+
+  File? imageFile;
+  //File imageFile = File('assets/perfil/perfil-de-usuario.png');
   final cpfFormatter = MaskTextInputFormatter(
     mask: '###.###.###-##',
     filter: {'#': RegExp(r'[0-9]')},
   );
+
   final phoneFormatter = MaskTextInputFormatter(
     mask: '## # ####-####',
     filter: {'#': RegExp(r'[0-9]')},
   );
+
   final _formkey = GlobalKey<FormState>();
+
   final authcontroller = Get.find<AuthController>();
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      /* appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(
+            0), // Define a altura como zero para ocultar o AppBar
+        child: AppBar(
+          leading: const IconButton(
+            onPressed: null,
+            icon: Icon(PhosphorIcons.bell_bold),
+            color: Colors.black54,
+          ),
+          actions: const [
+            IconButton(
+              onPressed: null,
+              icon: Icon(PhosphorIcons.bell),
+              color: Colors.black54,
+            ),
+          ],
+        ),
+      ),*/
       backgroundColor: CustomColors.customSwatchColor,
       body: SingleChildScrollView(
         child: SizedBox(
@@ -59,6 +97,43 @@ class SignUpScreen extends StatelessWidget {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Stack(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 75,
+                                      backgroundColor:
+                                          const Color.fromARGB(99, 71, 67, 67),
+                                      child: CircleAvatar(
+                                        radius: 65,
+                                        backgroundColor: Colors.grey[300],
+                                        backgroundImage: imageFile != null
+                                            ? FileImage(imageFile!)
+                                            : const AssetImage(
+                                                    'assets/perfil/perfil-de-usuario.png')
+                                                as ImageProvider,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: 5,
+                                      right: 5,
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.grey[200],
+                                        child: IconButton(
+                                          onPressed: _showOpcoesBottomSheet,
+                                          icon: Icon(
+                                            PhosphorIcons.camera,
+                                            color: Colors.grey[400],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                             CustomTextField(
                               icon: Icons.email,
                               label: 'Email',
@@ -114,18 +189,35 @@ class SignUpScreen extends StatelessWidget {
                                         borderRadius:
                                             BorderRadius.circular(18)),
                                   ),
-                                  onPressed: authcontroller.isloading.value
+                                  onPressed: authcontroller.isLoading.value
                                       ? null
-                                      : () {
+                                      : () async {
                                           FocusScope.of(context).unfocus();
                                           if (_formkey.currentState!
                                               .validate()) {
                                             _formkey.currentState!.save();
+                                            String imagePath;
+                                            if (imageFile != null) {
+                                              imagePath = await authcontroller
+                                                  .saveImageToAppDirectory(
+                                                      File(imageFile!.path));
+                                            } else {
+                                              // Carregar imagem de ativos e salvar
+                                              ByteData data = await rootBundle.load(
+                                                  'assets/perfil/perfil-de-usuario.png');
+                                              List<int> bytes =
+                                                  data.buffer.asUint8List();
+                                              imagePath = await authcontroller
+                                                  .saveImageToAppDirectoryFromBytes(
+                                                      bytes);
+                                            }
+                                            authcontroller.user.userphoto =
+                                                imagePath;
                                             authcontroller.signUp();
                                             print(authcontroller.user);
                                           }
                                         },
-                                  child: authcontroller.isloading.value
+                                  child: authcontroller.isLoading.value
                                       ? const CircularProgressIndicator()
                                       : const Text(
                                           'Cadastrar usuario',
@@ -159,6 +251,99 @@ class SignUpScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  pick(ImageSource source) async {
+    final pickedFile = await imagePicker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = File(pickedFile.path);
+      });
+    } /* else {
+      // Se o usuário cancelar a escolha da imagem, use a imagem padrão
+      setState(() {
+        imageFile = File('assets/perfil/perfil-de-usuario.png');
+      });
+    }*/
+  }
+
+  void _showOpcoesBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.grey[200],
+                  child: Center(
+                    child: Icon(
+                      PhosphorIcons.image,
+                      color: Colors.grey[500],
+                    ),
+                  ),
+                ),
+                title: Text(
+                  'Galeria',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  // Buscar imagem da galeria
+                  pick(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.grey[200],
+                  child: Center(
+                    child: Icon(
+                      PhosphorIcons.camera,
+                      color: Colors.grey[500],
+                    ),
+                  ),
+                ),
+                title: Text(
+                  'Câmera',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  // Fazer foto da câmera
+                  pick(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.grey[200],
+                  child: Center(
+                    child: Icon(
+                      PhosphorIcons.trash,
+                      color: Colors.grey[500],
+                    ),
+                  ),
+                ),
+                title: Text(
+                  'Remover',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  // Tornar a foto null
+                  setState(() {
+                    imageFile = null;
+                  });
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

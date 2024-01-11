@@ -1,12 +1,12 @@
 import 'package:brasiltoon/src/constants/endpoint.dart';
 import 'package:brasiltoon/src/models/category_model.dart';
-import 'package:brasiltoon/src/pages/publish_product/cape_product/result/cape_product_result.dart';
+import 'package:brasiltoon/src/pages/story_editing/result/editi_result.dart';
 import 'package:brasiltoon/src/services/http_manager.dart';
+import 'dart:convert';
 
-class CapeProductRepository {
+class EditingRepository {
   final HttpManager _httpManager = HttpManager();
-
-  Future<CapeProductResult<List<CategoryModel>>> getAllCategories() async {
+  Future<EditiResult<List<CategoryModel>>> getAllCategories() async {
     final result = await _httpManager.restRequest(
       url: Endpoints.getAllCategories,
       method: HttpMethods.post,
@@ -17,28 +17,28 @@ class CapeProductRepository {
           (List<Map<String, dynamic>>.from(result['result']))
               .map(CategoryModel.fromJson)
               .toList();
-      return CapeProductResult.success(data);
+      return EditiResult.success(data);
     } else {
-      return CapeProductResult.error(
+      return EditiResult.error(
           'Ocorreu um erro inesperado ao recuperar as categorias');
     }
   }
 
-  Future<CapeProductResult<String>> publishCover({
+  Future<EditiResult<String>> editiCover({
     required String userId,
     required String token,
     required String title,
-    required String cape,
+    required String productId,
     required String description,
     required String category,
   }) async {
     final result = await _httpManager.restRequest(
-        url: Endpoints.publishCape,
+        url: Endpoints.modifyCoverStory,
         method: HttpMethods.post,
         body: {
           'user': userId,
+          'productId': productId,
           "title": title,
-          "cape": cape,
           "description": description,
           "category": category
         },
@@ -46,11 +46,25 @@ class CapeProductRepository {
           'X-Parse-Session-Token': token,
         });
     if (result['result'] != null) {
-      return CapeProductResult.success(result['result']['id']);
+      Map<String, dynamic> jsonData = result['result'];
+
+      // Formata o JSON com quebra de linha após cada vírgula
+      String jsonString = const JsonEncoder().convert(jsonData);
+      // Remove as chaves e as aspas
+      jsonString = jsonString
+          .replaceAll('{', '')
+          .replaceAll('}', '')
+          .replaceAll('"', '');
+
+      // Formata o JSON com quebra de linha após cada vírgula
+      String formattedJson =
+          const JsonEncoder.withIndent('  ').convert(jsonData);
+      formattedJson = formattedJson.replaceAll(',', ',\n');
+
+      return EditiResult.success(formattedJson);
       //   print('id ');
     } else {
-      return CapeProductResult.error(
-          'Não foi posivel publicar esta capa para historia');
+      return EditiResult.error('Não foi posivel editar esta capa da historia');
     }
   }
 }

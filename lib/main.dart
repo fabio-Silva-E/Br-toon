@@ -6,8 +6,9 @@ import 'package:brasiltoon/src/pages_routes/pages_routes.dart';
 import 'package:get/get.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   Get.put(AuthController());
+  WidgetsFlutterBinding.ensureInitialized();
+
   // try {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

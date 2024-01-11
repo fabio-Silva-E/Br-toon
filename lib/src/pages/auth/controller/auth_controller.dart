@@ -5,12 +5,17 @@ import 'package:brasiltoon/src/pages/auth/result/auth_result.dart';
 import 'package:brasiltoon/src/pages_routes/pages_routes.dart';
 import 'package:brasiltoon/src/services/util_services.dart';
 import 'package:get/get.dart';
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path_provider/path_provider.dart';
 
 class AuthController extends GetxController {
-  RxBool isloading = false.obs;
+  RxBool isLoading = false.obs;
+  RxBool setLoading = false.obs;
   final authRepository = AuthRepository();
   final utilsServices = UtilsServices();
   UserModel user = UserModel();
+
   @override
   void onInit() {
     super.onInit();
@@ -41,14 +46,14 @@ class AuthController extends GetxController {
     required String currentPassword,
     required String newPassword,
   }) async {
-    isloading.value = true;
+    isLoading.value = true;
     final result = await authRepository.changPassword(
       email: user.email!,
       currentPassword: currentPassword,
       newPassword: newPassword,
       token: user.token!,
     );
-    isloading.value = false;
+    isLoading.value = false;
     if (result) {
       //menssagem
       utilsServices.showToast(
@@ -85,8 +90,9 @@ class AuthController extends GetxController {
   }
 
   Future<void> signUp() async {
-    isloading.value = true;
+    isLoading.value = true;
     AuthResult result = await authRepository.signUp(user);
+    isLoading.value = false;
     result.when(
       success: (user) {
         this.user = user;
@@ -105,10 +111,10 @@ class AuthController extends GetxController {
     required String email,
     required String password,
   }) async {
-    isloading.value = true;
+    isLoading.value = true;
     AuthResult result =
         await authRepository.signin(email: email, password: password);
-    isloading.value = false;
+    isLoading.value = false;
     result.when(
       success: (user) {
         this.user = user;
@@ -122,5 +128,96 @@ class AuthController extends GetxController {
         );
       },
     );
+  }
+
+  String extractAndReplace(String fullUrl) {
+    // Analisa a URL completa
+    Uri uri = Uri.parse(fullUrl);
+
+    // Obtém o caminho local após a última barra
+    String localPath = uri.pathSegments.last;
+
+    // Substitui "%25" por "/"
+    String modifiedPath = localPath.replaceAll('%25', '/');
+
+    return modifiedPath;
+  }
+
+  Future<void> modifyImage(String profilePath, File newImage) async {
+    setLoading.value =
+        true; // Definindo o estado de carregamento para verdadeiro
+    String modifiedPath = extractAndReplace(profilePath);
+    try {
+      //
+      // Referência ao caminho no Firebase Storage
+      Reference storageReference =
+          FirebaseStorage.instance.ref().child(modifiedPath);
+      print(modifiedPath);
+      // Envia o novo arquivo para substituir o existente
+      await storageReference.putFile(newImage);
+
+      // Obtém o URL do arquivo recém-enviado
+      String imagePath = await storageReference.getDownloadURL();
+
+      // Atualiza o URL da imagem no seu modelo de usuário ou onde quer que seja necessário
+      user.userphoto = imagePath;
+
+      // Outras ações ou atualizações necessárias
+
+      // Retorna o URL completo da imagem
+      print(imagePath);
+      setLoading.value = false;
+    } catch (e) {
+      // Lida com erros durante a modificação
+      utilsServices.showToast(
+        message: 'Erro durante a modificação da imagem: $e',
+        isError: true,
+      );
+      print('Erro durante a modificação da imagem: $e');
+      setLoading.value = false;
+    }
+  }
+
+  Future<String> saveImageToAppDirectoryFromBytes(List<int> bytes) async {
+    // Criar um arquivo temporário no diretório de cache
+    Directory tempDir = await getTemporaryDirectory();
+    String tempPath = tempDir.path;
+    File tempFile = File('$tempPath/temp_image.png');
+
+    // Escrever os bytes da imagem no arquivo temporário
+    await tempFile.writeAsBytes(bytes);
+
+    // Chamar o método existente para salvar o arquivo
+    return saveImageToAppDirectory(tempFile);
+  }
+
+  Future<String> saveImageToAppDirectory(File image) async {
+    try {
+      // Gera um nome de arquivo único para a imagem usando UUID
+      String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+      String imageName = '$uniqueFileName.png';
+
+      // Referência ao caminho no Firebase Storage
+      Reference storageReference =
+          FirebaseStorage.instance.ref().child('perfil/$imageName');
+
+      // Envia o arquivo para o Firebase Storage
+      await storageReference.putFile(image);
+
+      // Obtém o URL do arquivo recém-enviado
+      String imagePath = await storageReference.getDownloadURL();
+
+      // Retorna o URL completo da imagem
+      print(imagePath);
+      return imagePath;
+    } catch (e) {
+      // Lida com erros durante o upload
+      utilsServices.showToast(
+        message: 'Erro durante o upload da imagem: $e',
+        isError: true,
+      );
+      print('Erro durante o upload da imagem: $e');
+      return '';
+    }
   }
 }
