@@ -18,4 +18,5 @@ abstract class Endpoints {
   static const String publishChapter = '$baseurl/publish-cape-chapter';
   static const String publishPages = '$baseurl/publish-pages-chapter';
   static const String modifyCoverStory = '$baseurl/modify-cover-story';
+  static const String getCartCoins = '$baseurl/get-cart-coins';
 }

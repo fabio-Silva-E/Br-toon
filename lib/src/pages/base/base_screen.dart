@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:brasiltoon/src/pages/base/controller/navigation_controller.dart';
 import 'package:brasiltoon/src/pages/favorites/view/favorites_tab.dart';
 import 'package:brasiltoon/src/pages/home/view/home_tab.dart';
-import 'package:brasiltoon/src/pages/orders/orders_tab.dart';
+import 'package:brasiltoon/src/pages/cart/view/cart_tab.dart';
 import 'package:brasiltoon/src/pages/profile/profile_tab.dart';
 import 'package:brasiltoon/src/pages/publishers/view/publishers_tab.dart';
 
@@ -22,12 +22,12 @@ class _BaseScreenState extends State<BaseScreen> {
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: navigationController.pageController,
-        children: const [
-          HomeTab(),
-          FavoritesTab(),
+        children: [
+          const HomeTab(),
+          const FavoritesTab(),
           OrdersTab(),
-          PublishersTab(),
-          ProfileTab(),
+          const PublishersTab(),
+          const ProfileTab(),
         ],
       ),
       bottomNavigationBar: Obx(() => BottomNavigationBar(
