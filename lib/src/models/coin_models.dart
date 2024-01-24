@@ -21,4 +21,8 @@ class CoinModel {
   factory CoinModel.fromJson(Map<String, dynamic> json) =>
       _$CoinModelFromJson(json);
   Map<String, dynamic> toJson() => _$CoinModelToJson(this);
+  @override
+  String toString() {
+    return 'CoinModel(id: $id, itemName: $itemName, imgUrl: $imgUrl, price: $price)';
+  }
 }

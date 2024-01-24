@@ -2,6 +2,8 @@ import 'package:brasiltoon/src/pages/auth/view/sign_in_screen.dart';
 import 'package:brasiltoon/src/pages/auth/view/sign_up_screen.dart';
 import 'package:brasiltoon/src/pages/base/base_screen.dart';
 import 'package:brasiltoon/src/pages/base/binding/navigation_binding.dart';
+import 'package:brasiltoon/src/pages/cart/binding/cart_binding.dart';
+import 'package:brasiltoon/src/pages/coin/binding/coin_binding.dart';
 import 'package:brasiltoon/src/pages/favorites/binding/favorites_binding.dart';
 import 'package:brasiltoon/src/pages/story_editing/binding/editing_binding.dart';
 import 'package:brasiltoon/src/pages/home/binding/home_binding.dart';
@@ -42,6 +44,8 @@ abstract class AppPages {
         ChapterBinding(),
         PagesBinding(),
         EditingBinding(),
+        CartBinding(),
+        CoinBinding(),
       ],
     ),
   ];

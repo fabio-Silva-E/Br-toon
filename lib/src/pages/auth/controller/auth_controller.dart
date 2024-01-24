@@ -2,7 +2,7 @@ import 'package:brasiltoon/src/constants/storage_keys.dart';
 import 'package:brasiltoon/src/models/user_models.dart';
 import 'package:brasiltoon/src/pages/auth/repository/auth_repository.dart';
 import 'package:brasiltoon/src/pages/auth/result/auth_result.dart';
-import 'package:brasiltoon/src/pages_routes/pages_routes.dart';
+import 'package:brasiltoon/src/pages_routes/app_pages.dart';
 import 'package:brasiltoon/src/services/util_services.dart';
 import 'package:get/get.dart';
 import 'dart:io';

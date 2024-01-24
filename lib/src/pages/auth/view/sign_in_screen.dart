@@ -8,7 +8,7 @@ import 'package:brasiltoon/src/pages/common_widgets/app_name_widget.dart';
 import 'package:brasiltoon/src/pages/common_widgets/custom_text_field.dart';
 //import 'package:greengrocer/src/pages/base/base_screen.dart';
 import 'package:brasiltoon/src/config/custom_colors.dart';
-import 'package:brasiltoon/src/pages_routes/pages_routes.dart';
+import 'package:brasiltoon/src/pages_routes/app_pages.dart';
 import 'package:brasiltoon/src/services/util_services.dart';
 import 'package:brasiltoon/src/services/validator.dart';
 
@@ -100,6 +100,7 @@ class SignInScreen extends StatelessWidget {
                           builder: (authcontroller) {
                             return ElevatedButton(
                               style: ElevatedButton.styleFrom(
+                                backgroundColor: CustomColors.customSwatchColor,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(18)),
                               ),

@@ -2,7 +2,7 @@ import 'package:brasiltoon/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:brasiltoon/src/pages/auth/controller/auth_controller.dart';
-import 'package:brasiltoon/src/pages_routes/pages_routes.dart';
+import 'package:brasiltoon/src/pages_routes/app_pages.dart';
 import 'package:get/get.dart';
 
 void main() async {

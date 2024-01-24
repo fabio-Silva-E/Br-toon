@@ -1,24 +1,56 @@
 import 'package:brasiltoon/src/config/custom_colors.dart';
+import 'package:brasiltoon/src/models/cart_coin_models.dart';
+import 'package:brasiltoon/src/pages/cart/controller/cart_controller.dart';
+import 'package:brasiltoon/src/pages/cart/view/components/cart_tile.dart';
+import 'package:brasiltoon/src/pages/common_widgets/payment_dialog.dart';
 import 'package:brasiltoon/src/services/util_services.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class OrdersTab extends StatelessWidget {
-  OrdersTab({Key? key}) : super(key: key);
+class CartTab extends StatefulWidget {
+  const CartTab({Key? key}) : super(key: key);
+
+  @override
+  State<CartTab> createState() => _CartTabState();
+}
+
+class _CartTabState extends State<CartTab> {
   final UtilsServices utilsServices = UtilsServices();
+
+  double cartTotalPrice() {
+    /*  double total = 0;
+
+    for (var item in appData.cartItems) {
+      total += item.totalPrice();
+    }
+
+    return total;*/
+    return 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Coins'),
+        title: const Text('Carrinho'),
       ),
       body: Column(
         children: [
-          /* Expanded(
-           child: ListView.builder(
-              itemCount: 
-            ),
-          ),*/
+          // Lista de itens do carrinho
+          Expanded(
+            child: GetBuilder<CartController>(builder: (controller) {
+              return ListView.builder(
+                itemCount: controller.cartCoins.length,
+                itemBuilder: (_, index) {
+                  return CartTile(
+                    cartCoin: controller.cartCoins[index],
+                  );
+                },
+              );
+            }),
+          ),
 
+          // Total e botão de concluir o pedido
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -31,44 +63,115 @@ class OrdersTab extends StatelessWidget {
                   color: Colors.grey.shade300,
                   blurRadius: 3,
                   spreadRadius: 2,
-                )
+                ),
               ],
             ),
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Text(
-                    'Total geral',
-                    style: TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
-                  Text(utilsServices.priceToCurrency(50.5),
-                      style: TextStyle(
-                        fontSize: 23,
-                        color: CustomColors.customSwatchColor,
-                        fontWeight: FontWeight.bold,
-                      )),
-                  SizedBox(
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: CustomColors.customSwatchColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18),
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Total geral',
+                        style: TextStyle(
+                          fontSize: 12,
                         ),
                       ),
-                      onPressed: () {},
-                      child: const Text('Concluir pedido',
-                          style: TextStyle(
-                            fontSize: 18,
-                          )),
+                      GetBuilder<CartController>(
+                        builder: (controller) {
+                          return Text(
+                            utilsServices
+                                .priceToCurrency(controller.cartTotalPrice()),
+                            style: TextStyle(
+                              fontSize: 23,
+                              color: CustomColors.customSwatchColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                ),
+                /* SizedBox(
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: CustomColors.customSwatchColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18),
+                      ),
                     ),
-                  )
-                ]),
+                    onPressed: () async {
+                      bool? result = await showOrderConfirmation();
+
+                      if (result ?? false) {
+                        showDialog(
+                          context: context,
+                          builder: (_) {
+                            return PaymentDialog(
+
+                             order: appData.orders.first,
+                            );
+                          },
+                        );
+                      } else {
+                        utilsServices.showToast(
+                          message: 'Pedido não confirmado',
+                          isError: true,
+                        );
+                      }
+                    },
+                    child: const Text(
+                      'Concluir pedido',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ),*/
+              ],
+            ),
           ),
         ],
       ),
+    );
+  }
+
+  Future<bool?> showOrderConfirmation() {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: const Text('Confirmação'),
+          content: const Text('Deseja realmente concluir a compra no app?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: const Text('Não'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: const Text('Sim'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

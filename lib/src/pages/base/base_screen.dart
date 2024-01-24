@@ -1,3 +1,4 @@
+import 'package:brasiltoon/src/pages/coin/view/coin_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:brasiltoon/src/pages/base/controller/navigation_controller.dart';
@@ -25,7 +26,7 @@ class _BaseScreenState extends State<BaseScreen> {
         children: [
           const HomeTab(),
           const FavoritesTab(),
-          OrdersTab(),
+          CoinTab(), //havera necessidade de alteração
           const PublishersTab(),
           const ProfileTab(),
         ],
