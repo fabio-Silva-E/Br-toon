@@ -34,7 +34,7 @@ class AuthController extends GetxController {
     result.when(
       success: (user) {
         this.user = user;
-        saveTokenAndProceedToBase();
+        saveTokenAndProceedToBase(user.token);
       },
       error: (message) {
         signOut();
@@ -82,11 +82,18 @@ class AuthController extends GetxController {
     Get.offAllNamed(PagesRoutes.signInRoute);
   }
 
-  void saveTokenAndProceedToBase() {
-    //salvar token
-    utilsServices.saveLocalDate(key: StorageKeys.token, date: user.token!);
-    //ir para tela base
-    Get.offAllNamed(PagesRoutes.baseRoute);
+  void saveTokenAndProceedToBase(String? token) {
+    if (user.token != null) {
+      //salvar token
+      utilsServices.saveLocalDate(key: StorageKeys.token, date: user.token!);
+      //ir para tela base
+      print('token');
+      print(user.token);
+      Get.offAllNamed(PagesRoutes.baseRoute);
+    } else {
+      // Faça algo se o token for nulo, como exibir uma mensagem de erro
+      print('Erro: O token do usuário é nulo');
+    }
   }
 
   Future<void> signUp() async {
@@ -96,7 +103,7 @@ class AuthController extends GetxController {
     result.when(
       success: (user) {
         this.user = user;
-        saveTokenAndProceedToBase();
+        saveTokenAndProceedToBase(user.token);
       },
       error: (message) {
         utilsServices.showToast(
@@ -118,7 +125,7 @@ class AuthController extends GetxController {
     result.when(
       success: (user) {
         this.user = user;
-        saveTokenAndProceedToBase();
+        saveTokenAndProceedToBase(user.token);
       },
       error: (message) {
         print(message);

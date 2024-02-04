@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 abstract class NavigationTabs {
-  static const int Home = 0;
-  static const int Favorites = 1;
-  static const int Orders = 2;
-  static const int Publishers = 3;
-  static const int Profile = 4;
+  static const int home = 0;
+  static const int favorites = 1;
+  static const int coin = 2;
+  static const int publishers = 3;
+  static const int profile = 4;
+  static const int cart = 5;
+  static const int order = 6;
 }
 
 class NavigationController extends GetxController {
@@ -20,8 +22,8 @@ class NavigationController extends GetxController {
   void onInit() {
     super.onInit();
     _initNavigation(
-      pageController: PageController(initialPage: NavigationTabs.Home),
-      currentIndex: NavigationTabs.Home,
+      pageController: PageController(initialPage: NavigationTabs.home),
+      currentIndex: NavigationTabs.home,
     );
   }
 

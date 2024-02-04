@@ -43,4 +43,26 @@ class HomeRepository {
           'ocorreu um erro inesperado ao recuperar os itens');
     }
   }
+
+  Future<HomeResult<ItemModel>> getProducts() async {
+    final result = await _httpManager.restRequest(
+      url: Endpoints.getAllProducts,
+      method: HttpMethods.post,
+      body: {
+        "page": 0,
+        "itemsPerPage": null,
+        "title": null,
+        "categoryId": null
+      },
+    );
+    if (result['result'] != null) {
+      List<ItemModel> data = List<Map<String, dynamic>>.from(result['result'])
+          .map(ItemModel.fromJson)
+          .toList();
+      return HomeResult<ItemModel>.success(data);
+    } else {
+      return HomeResult.error(
+          'ocorreu um erro inesperado ao recuperar os itens');
+    }
+  }
 }

@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:brasiltoon/src/models/order_model.dart';
 import 'package:brasiltoon/src/services/util_services.dart';
 
+import 'package:mercadopago_sdk/mercadopago_sdk.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+var mp = MP.fromAccessToken(
+    "TEST-3245657067712792-011116-29e91066ea43bc5d79d4746dbe51ef13-232371830");
+
 class PaymentDialog extends StatelessWidget {
   final OrderModel order;
 
@@ -27,25 +33,17 @@ class PaymentDialog extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Titulo
+                // Título
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 10),
                   child: Text(
-                    'Pagamento com Pix',
+                    'Pagamento ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                     ),
                   ),
                 ),
-
-                // QR Code
-                /*   QrImage(
-                  data: "asd654as65da4s6d5a4s6d54",
-                  version: QrVersions.auto,
-                  size: 200.0,
-                ),*/
-
                 // Vencimento
                 Text(
                   'Vencimento: ${utilsServices.formatDateTime(order.overdueDateTime)}',
@@ -53,7 +51,6 @@ class PaymentDialog extends StatelessWidget {
                     fontSize: 12,
                   ),
                 ),
-
                 // Total
                 Text(
                   'Total: ${utilsServices.priceToCurrency(order.total)}',
@@ -62,34 +59,23 @@ class PaymentDialog extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-
-                // Botão copia e cola
-                OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    side: const BorderSide(
-                      width: 2,
-                      color: Colors.green,
-                    ),
-                  ),
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.copy,
-                    size: 15,
-                  ),
-                  label: const Text(
-                    'Copiar código Pix',
-                    style: TextStyle(
-                      fontSize: 13,
-                    ),
-                  ),
+                // Botão de Pagamento
+                ElevatedButton(
+                  onPressed: () async {
+                    String paymentUrl = order.paymentUrl;
+                    Uri uri = Uri.parse(
+                        paymentUrl); // Obtenha a URL de pagamento do seu modelo de pedido
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri);
+                    } else {
+                      throw 'Não foi possível abrir $paymentUrl';
+                    }
+                  },
+                  child: const Text('Pagar'),
                 ),
               ],
             ),
           ),
-
           Positioned(
             top: 0,
             right: 0,

@@ -1,4 +1,3 @@
-import 'package:brasiltoon/src/models/favorites_models.dart';
 import 'package:brasiltoon/src/pages/auth/controller/auth_controller.dart';
 import 'package:brasiltoon/src/pages/favorites/repository/favorites_repository.dart';
 import 'package:get/get.dart';
@@ -14,8 +13,9 @@ class HomeController extends GetxController {
   final utilsServices = UtilsServices();
   final homeRepository = HomeRepository();
   final favoritesRepository = FavoritesRepository();
+  // final favoritesController = Get.find<FavoritesController>();
   final authController = Get.find<AuthController>();
-  List<FavoritesItemModel> favoriteItems = [];
+
   bool isCategoryLoading = false;
   bool isProductLoading = true;
   bool isChangingCategory = false;
@@ -23,20 +23,23 @@ class HomeController extends GetxController {
   CategoryModel? currentCategory;
   List<ItemModel> get allProducts => currentCategory?.items ?? [];
   RxString searchTitle = ''.obs;
-
+  List<ItemModel> Products = [];
   bool get isLastPage {
     if (currentCategory!.items.length < itemPerPage) return true;
     return currentCategory!.pagination * itemPerPage > allProducts.length;
   }
 
-  void setLoading(bool value,
-      {bool isProduct = false, bool changingCategory = false}) {
+  void setLoading(
+    bool value, {
+    bool isProduct = false,
+    /*bool changingCategory = false*/
+  }) {
     if (!isProduct) {
       isCategoryLoading = value;
     } else {
       isProductLoading = value;
     }
-    isChangingCategory = changingCategory;
+    //isChangingCategory = changingCategory;
     update();
   }
 
@@ -49,6 +52,7 @@ class HomeController extends GetxController {
       time: const Duration(milliseconds: 600),
     );
     getAllCategory();
+    getProducts();
   }
 
   void selectCategory(CategoryModel category) {
@@ -81,7 +85,6 @@ class HomeController extends GetxController {
       },
     );
     setLoading(false);
-    print('Start getAllCategory');
   }
 
   void filterByTitle() {
@@ -137,6 +140,7 @@ class HomeController extends GetxController {
     result.when(
       success: (data) {
         currentCategory!.items.addAll(data);
+        // print('home $data');
       },
       error: (message) {
         utilsServices.showToast(
@@ -147,31 +151,26 @@ class HomeController extends GetxController {
     );
   }
 
-  Future<bool> isItemFavorite(ItemModel item) async {
-    // Verifica se o item está na lista de favoritos
-    final result = await favoritesRepository.getFavoritesItems(
-      /* page: currentCategory!.pagination,
-      itemPerPage: itemPerPage,*/
-      token: authController.user.token!,
-      userId: authController.user.id!,
-      categoryId: null,
-      title: null,
-    );
+  Future<void> getProducts() async {
+    final HomeResult<ItemModel> result = await homeRepository.getProducts();
 
     result.when(
       success: (data) {
-        favoriteItems = data;
+        Products = data;
         update();
-        // print(data);
+        // print('items $Products');
+        // Retorna a lista de favoritos
       },
       error: (message) {
         utilsServices.showToast(
           message: message,
           isError: true,
         );
+        // Retorna uma lista vazia em caso de erro
       },
     );
-
-    return favoriteItems.any((favoriteItem) => favoriteItem.item.id == item.id);
   }
 }
+
+  // Seus outros métodos e variáveis ...
+

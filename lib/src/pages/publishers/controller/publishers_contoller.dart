@@ -59,6 +59,7 @@ class PublisherController extends GetxController {
     publishersResult.when(
       success: (data) {
         allCategories.assignAll(data);
+        //print('Start $data');
         if (allCategories.isEmpty) return;
         selectCategory(allCategories.first);
       },
@@ -122,7 +123,7 @@ class PublisherController extends GetxController {
     result.when(
       success: (data) {
         currentCategory!.items.addAll(data);
-        update();
+        // update();
         // print(data);
       },
       error: (message) {

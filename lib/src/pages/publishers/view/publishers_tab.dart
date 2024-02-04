@@ -138,7 +138,7 @@ class _PublishersTabState extends State<PublishersTab> {
                               size: 40,
                               color: CustomColors.customSwatchColor,
                             ),
-                            const Text('Não há histórias com esse título'),
+                            const Text('Não há histórias para apresentar'),
                           ],
                         ),
                         child: GridView.builder(

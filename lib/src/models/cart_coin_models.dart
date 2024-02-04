@@ -1,5 +1,7 @@
-import 'package:brasiltoon/src/models/coin_models.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:json_annotation/json_annotation.dart';
+
+import 'package:brasiltoon/src/models/coin_models.dart';
 
 part 'cart_coin_models.g.dart';
 
@@ -8,6 +10,7 @@ class CartCoinModel {
   String id;
   CoinModel coin;
   int quantity;
+
   CartCoinModel({
     this.id = '',
     required this.coin,
@@ -20,6 +23,6 @@ class CartCoinModel {
   double totalPrice() => coin.price * quantity;
   @override
   String toString() {
-    return 'CartCoinModel(coin: $coin, id: $id, quantity: $quantity)';
+    return 'CartCoinModel(id: $id, coin: $coin, quantity: $quantity)';
   }
 }

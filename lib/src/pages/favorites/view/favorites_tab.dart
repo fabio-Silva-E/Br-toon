@@ -119,7 +119,7 @@ class _FavoritesTabState extends State<FavoritesTab> {
           //grid
           GetBuilder<FavoritesController>(
             builder: (controller) {
-              if (controller.favoriteItems.isEmpty) {
+              /*  if (controller.favorites.isEmpty) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -132,11 +132,12 @@ class _FavoritesTabState extends State<FavoritesTab> {
                         'Não a historias com essa categoria favoritada '),
                   ],
                 );
-              }
+              }*/
               return Expanded(
                 child: !controller.isProductloading
                     ? Visibility(
-                        visible: controller.favoriteItems.isNotEmpty,
+                        visible: (controller.currentCategory?.favorites ?? [])
+                            .isNotEmpty,
                         replacement: Column(
                           children: [
                             Icon(
@@ -144,7 +145,7 @@ class _FavoritesTabState extends State<FavoritesTab> {
                               size: 40,
                               color: CustomColors.customSwatchColor,
                             ),
-                            const Text('Não há histórias com esse título'),
+                            const Text('Não há favoritos para apresentar'),
                           ],
                         ),
                         child: GridView.builder(
@@ -157,18 +158,17 @@ class _FavoritesTabState extends State<FavoritesTab> {
                             crossAxisSpacing: 10,
                             childAspectRatio: 9 / 11.5,
                           ),
-                          itemCount: controller.favoriteItems.length,
+                          itemCount: controller.allProducts.length,
                           itemBuilder: (_, index) {
-                            if ((index + 1) ==
-                                controller.favoriteItems.length) {
+                            if ((index + 1) == controller.allProducts.length) {
                               if (((index + 1) ==
-                                      controller.favoriteItems.length) &&
+                                      controller.allProducts.length) &&
                                   !controller.isLastPage) {
                                 controller.loadMoreProducts();
                               }
                             }
                             return FavoritesTile(
-                              favoritesItem: controller.favoriteItems[index],
+                              favoritesItem: controller.allProducts[index],
                             );
                           },
                         ),

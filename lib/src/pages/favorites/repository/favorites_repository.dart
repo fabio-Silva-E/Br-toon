@@ -1,24 +1,25 @@
 import 'package:brasiltoon/src/constants/endpoint.dart';
-import 'package:brasiltoon/src/models/category_model.dart';
+import 'package:brasiltoon/src/models/category_favorite_model.dart';
+
 import 'package:brasiltoon/src/models/favorites_models.dart';
 import 'package:brasiltoon/src/pages/favorites/result/favorites_result.dart';
 import 'package:brasiltoon/src/services/http_manager.dart';
 
 class FavoritesRepository {
   final HttpManager _httpManager = HttpManager();
-
-  Future<FavoritesResult<List<CategoryModel>>> getAllCategories() async {
+  Future<FavoritesResult<List<CategoryModelFavorite>>>
+      getAllFavoritesCategories() async {
     final result = await _httpManager.restRequest(
       url: Endpoints.getAllCategories,
       method: HttpMethods.post,
     );
 
     if (result['result'] != null) {
-      List<CategoryModel> data =
+      List<CategoryModelFavorite> data =
           (List<Map<String, dynamic>>.from(result['result']))
-              .map(CategoryModel.fromJson)
+              .map(CategoryModelFavorite.fromJson)
               .toList();
-      return FavoritesResult.success(data);
+      return FavoritesResult<List<CategoryModelFavorite>>.success(data);
     } else {
       return FavoritesResult.error(
           'Ocorreu um erro inesperado ao recuperar as categorias');
@@ -26,10 +27,10 @@ class FavoritesRepository {
   }
 
   Future<FavoritesResult<List<FavoritesItemModel>>> getFavoritesItems({
+    required int itemPerPage,
+    required int page,
     required String token,
     required String userId,
-    /* required int itemPerPage,
-    required int page,*/
     String? categoryId, // Adicionando categoryId como um parâmetro opcional
     String? title, // Adicionando title como um parâmetro opcional
   }) async {
@@ -40,8 +41,8 @@ class FavoritesRepository {
         'X-Parse-Session-Token': token,
       },
       body: {
-        /*'page': page,
-        'itemsPerPage': itemPerPage,*/
+        'page': page,
+        'itemsPerPage': itemPerPage,
         'user': userId,
         'categoryId': categoryId, // Passando o categoryId, se disponível
         'title': title, // Passando o title, se disponível
@@ -55,6 +56,39 @@ class FavoritesRepository {
               .toList();
 
       return FavoritesResult.success(data);
+    } else {
+      return FavoritesResult.error(
+          'Ocorreu um erro ao recuperar as histórias de seus favoritos');
+    }
+  }
+
+  Future<FavoritesResult<List<FavoritesItemModel>>> getAllFavoritesItems({
+    required String token,
+    required String userId,
+    // Adicionando title como um parâmetro opcional
+  }) async {
+    final result = await _httpManager.restRequest(
+      url: Endpoints.getFavoritesItems,
+      method: HttpMethods.post,
+      headers: {
+        'X-Parse-Session-Token': token,
+      },
+      body: {
+        'user': userId,
+        "page": 0,
+        "itemsPerPage": null,
+        "title": null,
+        "categoryId": null
+      },
+    );
+
+    if (result['result'] != null) {
+      List<FavoritesItemModel> data =
+          List<Map<String, dynamic>>.from(result['result'])
+              .map(FavoritesItemModel.fromJson)
+              .toList();
+
+      return FavoritesResult<List<FavoritesItemModel>>.success(data);
     } else {
       return FavoritesResult.error(
           'Ocorreu um erro ao recuperar as histórias de seus favoritos');
@@ -76,6 +110,28 @@ class FavoritesRepository {
       },
     );
     return result.isEmpty;
+  }
+
+  Future<FavoritesResult<int>> favoritesCount({
+    required String user,
+    required String token,
+  }) async {
+    final result = await _httpManager.restRequest(
+      url: Endpoints.getFavoriteCount,
+      method: HttpMethods.post,
+      body: {
+        'user': user,
+      },
+      headers: {
+        'X-Parse-Session-Token': token,
+      },
+    );
+    if (result['result'] != null) {
+      return FavoritesResult.success(result['result']['itemCount']);
+    } else {
+      return FavoritesResult.error(
+          'erro ao recuperar a contagen dos favoritos');
+    }
   }
 
   Future<FavoritesResult<String>> addItemToFavorites({

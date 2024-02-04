@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:brasiltoon/src/pages/auth/controller/auth_controller.dart';
 import 'package:brasiltoon/src/pages_routes/app_pages.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 void main() async {
@@ -16,7 +17,11 @@ void main() async {
   //      } catch (e) {
   //  print('Erro durante a inicialização do Firebase: $e');
   // }
-  runApp(const MyApp());
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]).then((_) {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {

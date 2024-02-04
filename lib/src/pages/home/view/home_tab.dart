@@ -25,74 +25,89 @@ class _HomeTabState extends State<HomeTab> {
   GlobalKey<CartIconKey> globalKeyFavoritesItems = GlobalKey<CartIconKey>();
   final searchController = TextEditingController();
   final navigationController = Get.find<NavigationController>();
+  final favoritesController = Get.find<FavoritesController>();
   late Function(GlobalKey) runAddFavoritesAnimatios;
+  // String favoritesCount = '';
   void itemSelectedFavoritesAnimentinos(GlobalKey gkImage) {
     runAddFavoritesAnimatios(gkImage);
+
     ultilsServices.showToast(message: ' adicionado aos seus favoritos');
   }
 
   final UtilsServices ultilsServices = UtilsServices();
+  /* @override
+  void initState() {
+    super.initState();
+    // Chamada para obter o contador de favoritos
+    _fetchFavoritesCount();
+  }
+
+// Função assíncrona para buscar o contador de favoritos
+  void _fetchFavoritesCount() async {
+    int count = await favoritesController.getTotalFavoritesCount();
+    setState(() {
+      favoritesCount = count.toString();
+    });
+  }*/
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //app bar
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        title: const AppNameWidget(),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 15,
-              right: 15,
-            ),
-            child: GetBuilder<FavoritesController>(builder: (controller) {
-              return FutureBuilder<int>(
-                future: controller.getTotalFavoritesCount(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return const Text('Erro ao obter a contagem de favoritos');
-                  } else {
-                    return GestureDetector(
-                      onTap: () {
-                        navigationController
-                            .navigatePageview(NavigationTabs.Favorites);
-                      },
-                      child: Badge(
-                        backgroundColor: CustomColors.redContrastColor,
-                        label: Text(
-                          snapshot.data.toString(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                        ),
-                        child: AddToCartIcon(
-                          key: globalKeyFavoritesItems,
-                          icon: Icon(
-                            Icons.library_add,
-                            color: CustomColors.customSwatchColor,
-                          ),
+    return AddToCartAnimation(
+      gkCart: globalKeyFavoritesItems,
+      previewDuration: const Duration(milliseconds: 100),
+      previewCurve: Curves.ease,
+      receiveCreateAddToCardAnimationMethod: (addToCardAnimationMethod) {
+        runAddFavoritesAnimatios = addToCardAnimationMethod;
+      },
+      child: Scaffold(
+        //app bar
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          centerTitle: true,
+          title: const AppNameWidget(),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 15,
+                right: 15,
+              ),
+              child: GetBuilder<FavoritesController>(
+                builder: (controller) {
+                  return GestureDetector(
+                    onTap: () {
+                      navigationController
+                          .navigatePageview(NavigationTabs.favorites);
+                    },
+                    child: Badge(
+                      backgroundColor: CustomColors.redContrastColor,
+                      label: Text(
+                        controller.favoritesCount.length.toString(),
+                        //favoritesCount,
+                        //obs fazer uma função no backend para tentar sanar  erro
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
                         ),
                       ),
-                    );
-                  }
-                },
-              );
-            }),
-          )
-        ],
-      ),
+                      child: AddToCartIcon(
+                        key: globalKeyFavoritesItems,
+                        icon: Icon(
+                          Icons.library_add,
+                          color: CustomColors.customSwatchColor,
+                        ),
+                      ),
+                    ),
+                  );
 
-      body: AddToCartAnimation(
-        gkCart: globalKeyFavoritesItems,
-        previewDuration: const Duration(milliseconds: 100),
-        previewCurve: Curves.ease,
-        receiveCreateAddToCardAnimationMethod: (addToCardAnimationMethod) {
-          runAddFavoritesAnimatios = addToCardAnimationMethod;
-        },
-        child: Column(
+                  //  }
+                },
+              ),
+            )
+          ],
+        ),
+
+        body: Column(
           children: [
             //campo de pesquisa
             GetBuilder<HomeController>(builder: (controller) {
@@ -224,6 +239,8 @@ class _HomeTabState extends State<HomeTab> {
                             }
                             return ItemTile(
                                 item: controller.allProducts[index],
+                                categoryItems: controller
+                                    .Products, // Passe a lista de itens aqui
                                 favoritesAnimationMethod:
                                     itemSelectedFavoritesAnimentinos);
                           },

@@ -15,20 +15,12 @@ class HttpManager {
     Map? headers,
     Map? body,
   }) async {
-    //headers da requisição
-    /*  final defautHeaders = headers?.cast<String, String>() ?? {}
-     ..addAll({
-        'content-type': 'application/json',
-        'accept': 'application/json',
-        'X-Parse-Application-Id': '7SgciAjPemPXufDdr8OCBxVXgLqVO0gdRGm8Wlg2',
-        'X-Parse-REST-API-Key': '7vkH9vlU2cepO5WMAvJEF6cqE02fWcXnDVvHAN2I',
-      });*/
     final defautHeaders = headers?.cast<String, String>() ?? {}
       ..addAll({
         'content-type': 'application/json',
         'accept': 'application/json',
-        'X-Parse-Application-Id': 'lvm4pBlzdJSAov1tHqp4B54XA6xcwRtMDb1fvRSe',
-        'X-Parse-REST-API-Key': 'OsqmTjFt9Mz5LHacjZ9arsU1c1YKPGDwQKQuhQBs',
+        'X-Parse-Application-Id': 'U1GRwkiIJkdgJrK88pg6LFoXPhhxLVmmwZlXF6UX',
+        'X-Parse-REST-API-Key': 'Rl1KpFZ7BQey3UJSgordsjyOw6n25fbDSc3AgZ2m',
       });
     Dio dio = Dio();
     try {

@@ -10,18 +10,23 @@ class FavoritesItemModel {
   @JsonKey(name: 'product')
   ItemModel item;
   String id;
-  /* @JsonKey(defaultValue: 0)
-  int pagination;*/
+  //@JsonKey(name: 'category')
+  // String genere;
+  //int itemCount;
+  @JsonKey(defaultValue: 0)
+  int pagination;
 
   FavoritesItemModel({
     required this.id,
     required this.item,
-    // required this.pagination,
+    //  required this.genere,
+    required this.pagination,
   });
   factory FavoritesItemModel.fromJson(Map<String, dynamic> json) =>
       _$FavoritesItemModelFromJson(json);
   Map<String, dynamic> toJson() => _$FavoritesItemModelToJson(this);
 
   @override
-  String toString() => 'FavoritesItemModel(item: $item, id: $id)';
+  String toString() =>
+      'FavoritesItemModel(item: $item, id: $id, pagination: $pagination)';
 }

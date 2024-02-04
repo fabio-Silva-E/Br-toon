@@ -213,7 +213,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             }
                                             authcontroller.user.userphoto =
                                                 imagePath;
-                                            authcontroller.signUp();
+
+                                            await authcontroller.signUp();
                                             print(authcontroller.user);
                                           }
                                         },

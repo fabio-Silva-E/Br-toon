@@ -1,3 +1,4 @@
+import 'package:brasiltoon/src/models/category_model.dart';
 import 'package:brasiltoon/src/pages/home/controller/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,12 +10,15 @@ import 'package:brasiltoon/src/services/util_services.dart';
 
 class ItemTile extends StatefulWidget {
   final ItemModel item;
+  final List<ItemModel> categoryItems;
   final void Function(GlobalKey) favoritesAnimationMethod;
-
+  // final CategoryModel category;
   const ItemTile({
     super.key,
+    required this.categoryItems,
     required this.item,
     required this.favoritesAnimationMethod,
+    // required this.category,
   });
 
   @override
@@ -39,19 +43,28 @@ class _ItemTileState extends State<ItemTile> {
     _checkIsFavorite();
   }
 
+  @override
+  void didUpdateWidget(ItemTile oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.item != oldWidget.item) {
+      _checkIsFavorite();
+    }
+  }
+
   Future<void> _checkIsFavorite() async {
     // Define o estado para mostrar o indicador de carregamento
     setState(() {
       isCheckingFavorite = true;
     });
 
-    isFavorite = await homeController.isItemFavorite(widget.item);
+    bool isItemFavorite = await favoritesController.isItemFavorite(widget.item);
 
     // Atualiza o estado após a conclusão da verificação
     setState(() {
       isCheckingFavorite = false;
       // Define o estado para mostrar ou ocultar o botão favorito com base no resultado da verificação
-      showFavoriteButton = !isFavorite;
+      showFavoriteButton =
+          !isItemFavorite; // Exibe o botão se o item não for favorito
     });
   }
 
@@ -68,7 +81,7 @@ class _ItemTileState extends State<ItemTile> {
     });
 
     await favoritesController.addItemToFavorites(item: item);
-
+    // await favoritesController.updateFavoritesCount();
     // Atualiza o estado após a conclusão da operação de adição aos favoritos
     setState(() {
       isFavorite = true;
@@ -162,7 +175,8 @@ class _ItemTileState extends State<ItemTile> {
                           bottomLeft: Radius.circular(15),
                           topRight: Radius.circular(20),
                         ),
-                        color: Colors.black.withOpacity(0.5),
+                        color:
+                            const Color.fromARGB(255, 0, 0, 0).withOpacity(0.5),
                       ),
                       child: const Center(
                         child: CircularProgressIndicator(
