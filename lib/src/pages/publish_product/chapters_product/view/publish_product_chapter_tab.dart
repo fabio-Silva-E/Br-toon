@@ -38,12 +38,13 @@ class _PublishChapterTabState extends State<PublishChapterTab> {
   final chapterController = Get.find<PublishChapterController>();
   final TextEditingController titleController = TextEditingController();
   final TextEditingController capeController = TextEditingController();
-
+  final TextEditingController descriptionController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Capitulo'),
+        automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -61,36 +62,48 @@ class _PublishChapterTabState extends State<PublishChapterTab> {
                 onTap: () => uploadImage(),
                 trailing: getImageWidget(),
               ),
-              ElevatedButton(
-                onPressed: chapterController.isloading.value
-                    ? null
-                    : () async {
-                        FocusScope.of(context).unfocus();
-                        // Verificar se todos os campos obrigatórios estão preenchidos
-                        if (capa != null && titleController.text.isNotEmpty) {
-                          // Realizar o upload da capa e publicar
-                          String imagePath = await chapterController
-                              .saveImageToAppDirectory(File(capa!.path));
-
-                          chapterController.publishChapter(
-                            title: titleController.text,
-                            cape: imagePath,
-                            productId: widget.productId,
-                          );
-                        } else {
-                          print('Preencha todos os campos antes de publicar.');
-                          // Mostrar mensagem de erro se algum campo estiver vazio
-                          utilsServices.showToast(
-                            message:
-                                'Preencha todos os campos antes de publicar.',
-                            isError: true,
-                          );
-                        }
-                      },
-                child: chapterController.isloading.value
-                    ? const CircularProgressIndicator()
-                    : const Text('Publicar Capitulo'),
+              buildTextField(
+                controller: descriptionController,
+                label: 'Descrição da história',
               ),
+              const SizedBox(height: 20),
+              SizedBox(
+                  child: Obx(
+                () => ElevatedButton(
+                  onPressed: chapterController.isloading.value
+                      ? null
+                      : () async {
+                          FocusScope.of(context).unfocus();
+                          // Verificar se todos os campos obrigatórios estão preenchidos
+                          if (capa != null &&
+                              titleController.text.isNotEmpty &&
+                              descriptionController.text.isNotEmpty) {
+                            // Realizar o upload da capa e publicar
+                            String imagePath = await chapterController
+                                .saveImageToAppDirectory(File(capa!.path));
+
+                            chapterController.publishChapter(
+                              title: titleController.text,
+                              cape: imagePath,
+                              description: descriptionController.text,
+                              productId: widget.productId,
+                            );
+                          } else {
+                            print(
+                                'Preencha todos os campos antes de publicar.');
+                            // Mostrar mensagem de erro se algum campo estiver vazio
+                            utilsServices.showToast(
+                              message:
+                                  'Preencha todos os campos antes de publicar.',
+                              isError: true,
+                            );
+                          }
+                        },
+                  child: chapterController.isloading.value
+                      ? const CircularProgressIndicator()
+                      : const Text('Publicar'),
+                ),
+              )),
             ],
           ),
         ),

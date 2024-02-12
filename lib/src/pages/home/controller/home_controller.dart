@@ -23,11 +23,16 @@ class HomeController extends GetxController {
   CategoryModel? currentCategory;
   List<ItemModel> get allProducts => currentCategory?.items ?? [];
   RxString searchTitle = ''.obs;
-  List<ItemModel> Products = [];
+  // List<ItemModel> Products = [];
   bool get isLastPage {
     if (currentCategory!.items.length < itemPerPage) return true;
     return currentCategory!.pagination * itemPerPage > allProducts.length;
   }
+
+  // Função específica para atualizar a tela
+  /* void updateScreen() {
+    update(); // Este método força a atualização da interface do usuário
+  }*/
 
   void setLoading(
     bool value, {
@@ -52,7 +57,7 @@ class HomeController extends GetxController {
       time: const Duration(milliseconds: 600),
     );
     getAllCategory();
-    getProducts();
+    //  getProducts();
   }
 
   void selectCategory(CategoryModel category) {
@@ -141,6 +146,7 @@ class HomeController extends GetxController {
       success: (data) {
         currentCategory!.items.addAll(data);
         // print('home $data');
+        update();
       },
       error: (message) {
         utilsServices.showToast(
@@ -151,7 +157,24 @@ class HomeController extends GetxController {
     );
   }
 
-  Future<void> getProducts() async {
+  Future<void> addItem({
+    required String category,
+    required ItemModel item,
+    // required String categoryId,
+  }) async {
+    // Obtenha a categoria correspondente ao ID
+
+    getAllCategory();
+    currentCategory =
+        allCategories.firstWhereOrNull((cat) => cat.id == category);
+    // Adiciona o novo item à lista de favoritos da categoria correspondente
+    currentCategory!.items.add(item);
+
+    getAllProducts();
+    update();
+  }
+
+/*  Future<void> getProducts() async {
     final HomeResult<ItemModel> result = await homeRepository.getProducts();
 
     result.when(
@@ -169,7 +192,7 @@ class HomeController extends GetxController {
         // Retorna uma lista vazia em caso de erro
       },
     );
-  }
+  }*/
 }
 
   // Seus outros métodos e variáveis ...

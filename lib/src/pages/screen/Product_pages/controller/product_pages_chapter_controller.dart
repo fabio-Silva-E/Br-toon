@@ -33,6 +33,7 @@ class ProductPagesChapterController extends GetxController {
   void onInit() {
     super.onInit();
     getAllChapterId();
+    // selectChapter();
   }
 
   void selectChapter(ChapterItemModel chapter) {
@@ -50,8 +51,10 @@ class ProductPagesChapterController extends GetxController {
     productPagesChapterResult.when(
       success: (data) {
         allChapter.assignAll(data);
+        print('capitulos $allChapter');
         if (allChapter.isEmpty) return;
         selectChapter(allChapter.first);
+        update();
       },
       error: (message) {
         utilsServices.showToast(
@@ -63,7 +66,7 @@ class ProductPagesChapterController extends GetxController {
   }
 
   Future<void> getAllPages(String chapterId) async {
-    // print('Updating pages for chapter ID: $chapterId');
+    print('Updating pages for chapter ID: $chapterId');
     setLoading(true, isPage: true);
     Map<String, dynamic> body = {
       'page': currentChapter!.pagination,

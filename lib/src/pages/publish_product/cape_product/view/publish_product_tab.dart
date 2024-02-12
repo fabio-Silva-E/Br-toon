@@ -28,9 +28,11 @@ class _PublishProductTabState extends State<PublishProductTab> {
     }
   }
 
+  final imagePicker = ImagePicker();
   final UtilsServices ultilsServices = UtilsServices();
   XFile? capa;
   final capeProductController = Get.find<CapeProductController>();
+
   final TextEditingController titleController = TextEditingController();
   final TextEditingController capeController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -41,6 +43,7 @@ class _PublishProductTabState extends State<PublishProductTab> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Capa'),
+        automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -97,7 +100,7 @@ class _PublishProductTabState extends State<PublishProductTab> {
                             },
                       child: capeProductController.isloading.value
                           ? const CircularProgressIndicator()
-                          : const Text('Publicar Capa'),
+                          : const Text('Publicar'),
                     )),
               ),
             ],

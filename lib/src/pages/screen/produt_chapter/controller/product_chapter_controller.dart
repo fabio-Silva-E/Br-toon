@@ -58,6 +58,7 @@ class ProductChapterController extends GetxController {
 
   void selectProduct(ItemModel product) {
     currentProduct = product;
+
     update();
     if (currentProduct!.chapters.isNotEmpty) return;
     getAllChapter(product.id);
@@ -71,8 +72,10 @@ class ProductChapterController extends GetxController {
     productChapterResult.when(
       success: (data) {
         allProduct.assignAll(data);
+        // print(allProduct);
         if (allProduct.isEmpty) return;
         selectProduct(allProduct.first);
+        update();
       },
       error: (message) {
         utilsServices.showToast(

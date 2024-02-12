@@ -44,6 +44,7 @@ class PublishPageController extends GetxController {
   }
 
   Future<String> saveImageToAppDirectory(File image) async {
+    isloading.value = true;
     try {
       // Gera um nome de arquivo único para a imagem usando UUID
       String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -61,6 +62,7 @@ class PublishPageController extends GetxController {
 
       // Retorna o URL completo da imagem
       print(imagePath);
+      isloading.value = false;
       return imagePath;
     } catch (e) {
       // Lida com erros durante o upload

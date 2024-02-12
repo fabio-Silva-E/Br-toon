@@ -1,4 +1,3 @@
-import 'package:brasiltoon/src/models/category_model.dart';
 import 'package:brasiltoon/src/pages/home/controller/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,12 +9,12 @@ import 'package:brasiltoon/src/services/util_services.dart';
 
 class ItemTile extends StatefulWidget {
   final ItemModel item;
-  final List<ItemModel> categoryItems;
+  //final List<ItemModel> categoryItems;
   final void Function(GlobalKey) favoritesAnimationMethod;
   // final CategoryModel category;
   const ItemTile({
     super.key,
-    required this.categoryItems,
+    // required this.categoryItems,
     required this.item,
     required this.favoritesAnimationMethod,
     // required this.category,
@@ -121,11 +120,14 @@ class _ItemTileState extends State<ItemTile> {
                       key: imageGk,
                     ),
                   ),
-                  Text(
-                    widget.item.itemName,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      widget.item.itemName,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],

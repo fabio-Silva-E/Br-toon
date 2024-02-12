@@ -134,4 +134,21 @@ class PublisherController extends GetxController {
       },
     );
   }
+
+  Future<void> addItem({
+    required String category,
+    required ItemModel item,
+    // required String categoryId,
+  }) async {
+    // Obtenha a categoria correspondente ao ID
+
+    getAllCategory();
+    currentCategory =
+        allCategories.firstWhereOrNull((cat) => cat.id == category);
+    // Adiciona o novo item à lista de favoritos da categoria correspondente
+    currentCategory!.items.add(item);
+
+    getPublishersItems();
+    update();
+  }
 }

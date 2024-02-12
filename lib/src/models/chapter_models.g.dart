@@ -11,6 +11,7 @@ ChapterItemModel _$ChapterItemModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String? ?? '',
       chaptersUrls: json['cape'] as String,
       nameChapter: json['titlechapter'] as String,
+      description: json['description'] as String,
       items: (json['items'] as List<dynamic>?)
               ?.map((e) =>
                   PagesChapterItemModel.fromJson(e as Map<String, dynamic>))
@@ -24,6 +25,7 @@ Map<String, dynamic> _$ChapterItemModelToJson(ChapterItemModel instance) =>
       'id': instance.id,
       'cape': instance.chaptersUrls,
       'titlechapter': instance.nameChapter,
+      'description': instance.description,
       'items': instance.items,
       'pagination': instance.pagination,
     };

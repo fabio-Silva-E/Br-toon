@@ -58,11 +58,14 @@ class _PublishersTileState extends State<PublishersTile> {
                     },
                   ),
                   //Nome
-                  Text(
-                    widget.publishersItem.itemName,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      widget.publishersItem.itemName,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   //categoria
@@ -105,38 +108,4 @@ class _PublishersTileState extends State<PublishersTile> {
       ],
     );
   }
-
-  /* Future<bool?> showOrderComfirmation() {
-    return showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: const Text('Comfirmação'),
-          content: const Text('Deseja realmente editar sua historia'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-              child: const Text('não'),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              child: const Text('sim'),
-            ),
-          ],
-        );
-      },
-    );
-  }*/
 }

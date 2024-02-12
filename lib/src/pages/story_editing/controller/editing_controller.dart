@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:brasiltoon/src/models/category_model.dart';
 import 'package:brasiltoon/src/pages/auth/controller/auth_controller.dart';
+import 'package:brasiltoon/src/pages/home/controller/home_controller.dart';
 import 'package:brasiltoon/src/pages/story_editing/repository/editing_repository.dart';
 import 'package:brasiltoon/src/pages/story_editing/result/editi_result.dart';
 import 'package:brasiltoon/src/services/util_services.dart';
@@ -10,9 +11,12 @@ import 'package:get/get.dart';
 
 class EditingController extends GetxController {
   RxBool isLoading = false.obs;
+  // final homeController = Get.find<HomeController>();
+
   final utilsServices = UtilsServices();
   final editingRepository = EditingRepository();
   final authController = Get.find<AuthController>();
+
   List<CategoryModel> allCategories = [];
   CategoryModel? currentCategory;
   String? selectedCategoryId;
@@ -62,7 +66,7 @@ class EditingController extends GetxController {
     return modifiedPath;
   }
 
-  Future<void> modifyCover(String profilePath, File newImage) async {
+  Future<void> editeImage(String profilePath, File newImage) async {
     isLoading.value =
         true; // Definindo o estado de carregamento para verdadeiro
     String modifiedPath = extractAndReplace(profilePath);
@@ -92,12 +96,12 @@ class EditingController extends GetxController {
         message: 'Erro durante a modificação da imagem: $e',
         isError: true,
       );
-      print('Erro durante a modificação da imagem: $e');
+      //print('Erro durante a modificação da imagem: $e');
       isLoading.value = false;
     }
   }
 
-  Future<void> editiCover({
+  Future<void> editeCover({
     required String title,
     required String productId,
     required String description,
@@ -105,7 +109,7 @@ class EditingController extends GetxController {
   }) async {
     isLoading.value = true;
 
-    final EditiResult<String> result = await editingRepository.editiCover(
+    final EditiResult<String> result = await editingRepository.editeCover(
       userId: authController.user.id!,
       token: authController.user.token!,
       title: title,
@@ -116,9 +120,39 @@ class EditingController extends GetxController {
 
     isLoading.value = false;
     result.when(success: (data) {
+      // homeController.getAllProducts();
+
       // Se a operação foi bem-sucedida, você pode prosseguir com outras ações
       utilsServices.showToast(
-        message: 'os dados da historia foram alterados para\n $data',
+        message: 'Os dados da historia foram alterados para\n $data',
+      );
+      // print('Success!: $data');
+    }, error: (message) {
+      utilsServices.showToast(
+        message: message,
+        isError: true,
+      );
+    });
+  }
+
+  Future<void> editeChapter({
+    required String title,
+    required String chapterId,
+    required String description,
+  }) async {
+    isLoading.value = true;
+    final EditiResult<String> result = await editingRepository.editeChapter(
+      userId: authController.user.id!,
+      token: authController.user.token!,
+      title: title,
+      chapterId: chapterId,
+      description: description,
+    );
+    isLoading.value = false;
+    result.when(success: (data) {
+      // Se a operação foi bem-sucedida, você pode prosseguir com outras ações
+      utilsServices.showToast(
+        message: 'os dados do capitulo foram alterados para\n $data',
       );
       // print('Success!: $data');
     }, error: (message) {

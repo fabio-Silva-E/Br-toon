@@ -1,35 +1,33 @@
 import 'dart:io';
 
 import 'package:brasiltoon/src/config/custom_colors.dart';
+import 'package:brasiltoon/src/models/chapter_models.dart';
 import 'package:brasiltoon/src/pages/story_editing/controller/editing_controller.dart';
-import 'package:brasiltoon/src/pages/story_editing/edit_screen/select_chapter_to_editing_tab.dart';
+import 'package:brasiltoon/src/pages/story_editing/edit_screen/select_page_to_editi.dart';
 import 'package:brasiltoon/src/services/util_services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:brasiltoon/src/models/item_models.dart';
 import 'package:flutter_phosphor_icons/flutter_phosphor_icons.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-class EditingCapeTab extends StatefulWidget {
-  final String productId;
-  final String category;
+class EditingChapterTab extends StatefulWidget {
+  final String chapterId;
+
   //final ItemModel publishersItem;
-  const EditingCapeTab({
+  const EditingChapterTab({
     Key? key,
     //  required this.publishersItem,
-    required this.productId,
-    required this.item,
-    required this.category,
+    required this.chapterId,
+    required this.chapter,
   }) : super(key: key);
-  final ItemModel item;
+  final ChapterItemModel chapter;
 
   @override
-  State<EditingCapeTab> createState() => _EditingCapeTabState();
+  State<EditingChapterTab> createState() => _EditingChapterTabState();
 }
 
-class _EditingCapeTabState extends State<EditingCapeTab> {
-  final TextEditingController idController = TextEditingController();
+class _EditingChapterTabState extends State<EditingChapterTab> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   late TextEditingController categoryController = TextEditingController();
@@ -43,7 +41,7 @@ class _EditingCapeTabState extends State<EditingCapeTab> {
             File(imageFile!.path)); // Para outras plataformas, usa Image.file
       }
     } else {
-      return Image.network(widget.item.imgUrl,
+      return Image.network(widget.chapter.chaptersUrls,
           fit:
               BoxFit.cover); // Se não houver imagem, retorna widget.item.imgUrl
     }
@@ -55,27 +53,17 @@ class _EditingCapeTabState extends State<EditingCapeTab> {
   @override
   void initState() {
     super.initState();
-    idController.text = widget.item.id;
     // Inicializa o controlador do título com um valor específico
-    titleController.text = widget.item.itemName;
-    descriptionController.text = widget.item.description;
+    titleController.text = widget.chapter.nameChapter;
+    descriptionController.text = widget.chapter.description;
   }
-
-  /* @override
-void didUpdateWidget(covariant EditingCapeTab oldWidget) {
-  super.didUpdateWidget(oldWidget);
-  if (oldWidget.item != widget.item) {
-    // Aqui você pode atualizar as propriedades ou realizar outras operações
-    // baseadas nas mudanças de widget.
-  }
-}*/
 
   @override
   Widget build(BuildContext context) {
-    String caminho = widget.item.imgUrl;
+    String caminho = widget.chapter.chaptersUrls;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Editar Capa'),
+        title: const Text('Editar Capitulo'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -94,7 +82,8 @@ void didUpdateWidget(covariant EditingCapeTab oldWidget) {
                     color: const Color.fromARGB(99, 71, 67, 67),
                     child: imageFile != null
                         ? getImageWidget()
-                        : Image.network(widget.item.imgUrl, fit: BoxFit.cover),
+                        : Image.network(widget.chapter.chaptersUrls,
+                            fit: BoxFit.cover),
                   ),
                 ),
                 Positioned(
@@ -115,17 +104,13 @@ void didUpdateWidget(covariant EditingCapeTab oldWidget) {
             ),
             buildTextField(
               controller: descriptionController,
-              label: 'Descrição da história',
+              label: 'Descrição do capitulo',
             ),
-            buildCategoryDropdown(),
-            const SizedBox(height: 20),
-            //botão do carrinho
-
+            const SizedBox(height: 10),
             SizedBox(
               height: 45,
               child: Obx(() => ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: CustomColors.customSwatchColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -140,11 +125,10 @@ void didUpdateWidget(covariant EditingCapeTab oldWidget) {
                                 await editingControler.editeImage(
                                     caminho, File(imageFile!.path));
                               }
-                              editingControler.editeCover(
+                              editingControler.editeChapter(
                                 title: titleController.text,
-                                productId: widget.productId,
+                                chapterId: widget.chapterId,
                                 description: descriptionController.text,
-                                category: categoryController.text,
                               );
                             } else {
                               utilsServices.showToast(
@@ -155,15 +139,10 @@ void didUpdateWidget(covariant EditingCapeTab oldWidget) {
                           },
                     child: editingControler.isLoading.value
                         ? const CircularProgressIndicator()
-                        : const Text(
-                            'Atualizar capa',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
+                        : const Text('Atualizar'),
                   )),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             SizedBox(
               height: 45,
 
@@ -176,14 +155,13 @@ void didUpdateWidget(covariant EditingCapeTab oldWidget) {
                   ),
                 ),
                 onPressed: () async {
-                  Get.to(() => SelectChapterToEditing(
-                        productId: widget.item.id,
-                        item: widget.item,
+                  Get.to(() => SelectPageToEditing(
+                        chapterId: widget.chapterId,
                       ));
                   // print(widget.item.id);
                 },
                 child: const Text(
-                  'Editar capitulos',
+                  'Editar paginas',
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -234,63 +212,6 @@ void didUpdateWidget(covariant EditingCapeTab oldWidget) {
     } catch (e) {
       print(e);
     }
-  }
-
-  Widget buildCategoryDropdown() {
-    return GetBuilder<EditingController>(
-      builder: (controller) {
-        if (categoryController.text.isEmpty) {
-          categoryController.text = widget.category;
-        }
-        // Obtém o ID da primeira categoria
-
-        return Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 32,
-            vertical: 40,
-          ),
-          decoration: const BoxDecoration(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                ' gênero :',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              DropdownButtonFormField<String>(
-                value: widget.category,
-                items: controller.allCategories.map((category) {
-                  return DropdownMenuItem<String>(
-                    value: category.id.toString(),
-                    child: Text(category.title),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  String categoryId = value ?? widget.category;
-                  controller.selectCategory(
-                    controller.allCategories.firstWhere(
-                      (category) => category.id.toString() == categoryId,
-                    ),
-                  );
-                  categoryController.text = categoryId;
-                },
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   Future<bool?> showOrderConfirmation() {

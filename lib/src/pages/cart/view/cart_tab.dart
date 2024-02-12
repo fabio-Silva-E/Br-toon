@@ -1,8 +1,6 @@
 import 'package:brasiltoon/src/config/custom_colors.dart';
-import 'package:brasiltoon/src/models/cart_coin_models.dart';
 import 'package:brasiltoon/src/pages/cart/controller/cart_controller.dart';
 import 'package:brasiltoon/src/pages/cart/view/components/cart_tile.dart';
-import 'package:brasiltoon/src/pages/common_widgets/payment_dialog.dart';
 import 'package:brasiltoon/src/services/util_services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

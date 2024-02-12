@@ -1,4 +1,3 @@
-import 'package:brasiltoon/src/models/cart_coin_models.dart';
 import 'package:brasiltoon/src/models/coin_models.dart';
 import 'package:brasiltoon/src/models/coin_of_user_models.dart';
 import 'package:brasiltoon/src/pages/auth/controller/auth_controller.dart';
@@ -31,7 +30,7 @@ class CoinController extends GetxController {
     setLoading(false);
     result.when(
       success: (data) {
-        print(data);
+        // print(data);
         coins = data;
         update();
       },
@@ -59,7 +58,6 @@ class CoinController extends GetxController {
         update();
       },
       error: (message) {
-        print('erro ao recuperar  as moedas');
         utilsServices.showToast(
           message: message,
           isError: true,

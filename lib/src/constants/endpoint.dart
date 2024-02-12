@@ -17,7 +17,8 @@ abstract class Endpoints {
   static const String publishCape = '$baseUrl/publish-cape-story';
   static const String publishChapter = '$baseUrl/publish-cape-chapter';
   static const String publishPages = '$baseUrl/publish-pages-chapter';
-  static const String modifyCoverStory = '$baseUrl/modify-cover-story';
+  static const String editeCoverStory = '$baseUrl/edite-cover-story';
+  static const String editeChapterStory = '$baseUrl/edite-chapter-story';
   static const String getCartCoins = '$baseUrl/get-cart-coins';
   static const String getAllCoins = '$baseUrl/get-coin-list';
   static const String addCoinToCart = '$baseUrl/add-coin-to-cart';
@@ -25,7 +26,7 @@ abstract class Endpoints {
   static const String checkout = '$baseUrl/checkout';
   static const String getAllOrders = '$baseUrl/get-orders';
   static const String getOrderItems = '$baseUrl/get-orders-coins';
-  static const String useCoinOfUser = '$baseUrl/use-coin-of-user';
+  static const String editePage = '$baseUrl/edite-pages-chapter';
   static const String getCoinsOfUser = '$baseUrl/get-coins-of-user';
   static const String getFavoriteCount = '$baseUrl/get-favorite-count';
 }

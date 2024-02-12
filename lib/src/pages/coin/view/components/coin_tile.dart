@@ -47,23 +47,28 @@ class _CoinTileState extends State<CoinTile> {
           width: 60,
         ),
         // Titulo
-        title: Row(
-          children: [
-            Text(
-              widget.coin.itemName,
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            children: [
+              FittedBox(
+                child: Text(
+                  widget.coin.itemName,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(width: 8), // Espaçamento entre os elementos
-            Text(
-              ' =  ${widget.coin.unitiQuantity}  moedas',
-              style: const TextStyle(
-                color: Colors.black54,
-                fontWeight: FontWeight.bold,
+              // Espaçamento entre os elementos
+              Text(
+                ' =  ${widget.coin.unitiQuantity}  moedas',
+                style: const TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         // Total
         subtitle: Text(

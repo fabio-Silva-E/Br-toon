@@ -10,7 +10,8 @@ class ChapterRepository {
     required String token,
     required String title,
     required String cape,
-    required String product,
+    required String productId,
+    required String description,
   }) async {
     final result = await _httpManager.restRequest(
         url: Endpoints.publishChapter,
@@ -19,7 +20,8 @@ class ChapterRepository {
           'user': userId,
           'title': title,
           'cape': cape,
-          'product': product,
+          'product': productId,
+          'description': description,
         },
         headers: {
           'X-Parse-Session-Token': token,

@@ -53,11 +53,14 @@ class _FavoritesTileState extends State<FavoritesTile> {
                     );
                   }),
                   //Nome
-                  Text(
-                    widget.favoritesItem.item.itemName,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      widget.favoritesItem.item.itemName,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   //categoria

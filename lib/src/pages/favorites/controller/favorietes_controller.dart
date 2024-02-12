@@ -1,9 +1,6 @@
-import 'dart:js_interop';
-
 import 'package:brasiltoon/src/models/category_favorite_model.dart';
 import 'package:brasiltoon/src/pages/home/controller/home_controller.dart';
 import 'package:brasiltoon/src/pages/home/repository/home_repository.dart';
-import 'package:brasiltoon/src/pages/home/result/home_result.dart';
 import 'package:get/get.dart';
 import 'package:brasiltoon/src/models/category_model.dart';
 import 'package:brasiltoon/src/models/favorites_models.dart';
@@ -235,7 +232,7 @@ class FavoritesController extends GetxController {
     );
   }
 
-  Future<List<ItemModel>> getAllProducts() async {
+  /* Future<List<ItemModel>> getAllProducts() async {
     final HomeResult<ItemModel> result = await homeRepository.getProducts();
 
     return result.when(
@@ -252,7 +249,7 @@ class FavoritesController extends GetxController {
         return []; // Retorna uma lista vazia em caso de erro
       },
     );
-  }
+  }*/
 
   Future<void> addItemToFavorites({
     required ItemModel item,
@@ -278,6 +275,7 @@ class FavoritesController extends GetxController {
             item: item,
             pagination: 0,
           );
+          getAllCategory();
 
           // Adiciona o novo item à lista de favoritos da categoria correspondente
           category.favorites.add(newFavoriteItem);
@@ -302,12 +300,12 @@ class FavoritesController extends GetxController {
 
   Future<bool> isItemFavorite(ItemModel item) async {
     List<FavoritesItemModel> favoriteItems = await getAllFavoritesItems();
-    print('favoritados ${favoriteItems.length}');
-    print('items $item');
+    // print('favoritados ${favoriteItems.length}');
+    // print('items $item');
 
     bool isFavorite =
         favoriteItems.any((favoriteItem) => favoriteItem.item.id == item.id);
-    print('isFavorite: $isFavorite');
+    //print('isFavorite: $isFavorite');
 
     return isFavorite;
   }

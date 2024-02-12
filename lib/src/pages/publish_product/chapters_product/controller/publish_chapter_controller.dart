@@ -21,15 +21,16 @@ class PublishChapterController extends GetxController {
     required String title,
     required String cape,
     required String productId,
+    required String description,
   }) async {
     isloading.value = true;
     final ChapterResult<String> result = await chapterRepository.publishChapter(
-      token: authController.user.token!,
-      userId: authController.user.id!,
-      title: title,
-      cape: cape,
-      product: productId,
-    );
+        token: authController.user.token!,
+        userId: authController.user.id!,
+        title: title,
+        cape: cape,
+        productId: productId,
+        description: description);
     isloading.value = false;
     print('Success! Product ID: $productId');
     result.when(success: (chapterId) {
@@ -49,6 +50,7 @@ class PublishChapterController extends GetxController {
   }
 
   Future<String> saveImageToAppDirectory(File image) async {
+    isloading.value = true;
     try {
       // Gera um nome de arquivo único para a imagem usando UUID
       String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -66,6 +68,7 @@ class PublishChapterController extends GetxController {
 
       // Retorna o URL completo da imagem
       print(imagePath);
+      isloading.value = false;
       return imagePath;
     } catch (e) {
       // Lida com erros durante o upload

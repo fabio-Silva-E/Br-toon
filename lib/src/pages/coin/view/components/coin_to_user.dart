@@ -1,10 +1,7 @@
-import 'package:brasiltoon/src/config/custom_colors.dart';
-
 import 'package:brasiltoon/src/models/coin_of_user_models.dart';
 
 import 'package:brasiltoon/src/services/util_services.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class CoinOfUserTile extends StatefulWidget {
   final CoinOfUserModel coin;

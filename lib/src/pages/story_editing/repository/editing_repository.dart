@@ -24,7 +24,7 @@ class EditingRepository {
     }
   }
 
-  Future<EditiResult<String>> editiCover({
+  Future<EditiResult<String>> editeCover({
     required String userId,
     required String token,
     required String title,
@@ -33,7 +33,7 @@ class EditingRepository {
     required String category,
   }) async {
     final result = await _httpManager.restRequest(
-        url: Endpoints.modifyCoverStory,
+        url: Endpoints.editeCoverStory,
         method: HttpMethods.post,
         body: {
           'user': userId,
@@ -65,6 +65,48 @@ class EditingRepository {
       //   print('id ');
     } else {
       return EditiResult.error('Não foi posivel editar esta capa da historia');
+    }
+  }
+
+  Future<EditiResult<String>> editeChapter({
+    required String userId,
+    required String token,
+    required String title,
+    required String chapterId,
+    required String description,
+  }) async {
+    final result = await _httpManager.restRequest(
+        url: Endpoints.editeChapterStory,
+        method: HttpMethods.post,
+        body: {
+          'user': userId,
+          'chapterId': chapterId,
+          "title": title,
+          "description": description
+        },
+        headers: {
+          'X-Parse-Session-Token': token,
+        });
+    if (result['result'] != null) {
+      Map<String, dynamic> jsonData = result['result'];
+
+      // Formata o JSON com quebra de linha após cada vírgula
+      String jsonString = const JsonEncoder().convert(jsonData);
+      // Remove as chaves e as aspas
+      jsonString = jsonString
+          .replaceAll('{', '')
+          .replaceAll('}', '')
+          .replaceAll('"', '');
+
+      // Formata o JSON com quebra de linha após cada vírgula
+      String formattedJson =
+          const JsonEncoder.withIndent('  ').convert(jsonData);
+      formattedJson = formattedJson.replaceAll(',', ',\n');
+
+      return EditiResult.success(formattedJson);
+      //   print('id ');
+    } else {
+      return EditiResult.error('Não foi posivel editar o capitulo');
     }
   }
 }

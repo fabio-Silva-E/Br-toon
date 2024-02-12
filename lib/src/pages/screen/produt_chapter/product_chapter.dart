@@ -1,3 +1,4 @@
+import 'package:brasiltoon/src/pages/screen/Product_pages/product_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:brasiltoon/src/models/chapter_models.dart';
@@ -46,11 +47,11 @@ class _ProductChapterState extends State<ProductChapter> {
               ChapterItemModel chapter = controller.allChapters[index];
 
               return GestureDetector(
-                onTap: () async {
-                  ProductChapterController controller =
-                      Get.find<ProductChapterController>();
-
-                  controller.onChapterSelected(chapter.id, widget.item);
+                onTap: () {
+                  Get.to(() => ProductScreen(
+                        chapterId: chapter.id,
+                        item: widget.item,
+                      ));
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
