@@ -17,7 +17,7 @@ class ItemModel {
   //File file;
   String description;
   @JsonKey(defaultValue: [])
-  List<ChapterItemModel> chapters; // Lista de URLs de imagens*/
+  List<ChapterItemModel> chapters; // Lista de URLs de imagens
   @JsonKey(defaultValue: 0)
   int pagination;
 
@@ -27,7 +27,7 @@ class ItemModel {
     required this.description,
     required this.imgUrl,
     required this.itemName,
-    required this.chapters, //trocar o nome para chamada correta no endpoint
+    required this.chapters,
     required this.pagination,
   });
   factory ItemModel.fromJson(Map<String, dynamic> json) =>

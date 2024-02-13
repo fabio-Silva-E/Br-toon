@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:brasiltoon/src/models/category_model.dart';
 import 'package:brasiltoon/src/pages/auth/controller/auth_controller.dart';
-import 'package:brasiltoon/src/pages/home/controller/home_controller.dart';
+
 import 'package:brasiltoon/src/pages/story_editing/repository/editing_repository.dart';
 import 'package:brasiltoon/src/pages/story_editing/result/editi_result.dart';
 import 'package:brasiltoon/src/services/util_services.dart';

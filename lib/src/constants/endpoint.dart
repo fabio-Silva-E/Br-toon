@@ -29,4 +29,5 @@ abstract class Endpoints {
   static const String editePage = '$baseUrl/edite-pages-chapter';
   static const String getCoinsOfUser = '$baseUrl/get-coins-of-user';
   static const String getFavoriteCount = '$baseUrl/get-favorite-count';
+  static const String getAllFavoritesItems = '$baseUrl/get-all-favorite-items';
 }

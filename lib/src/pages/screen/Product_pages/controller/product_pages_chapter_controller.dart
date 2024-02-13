@@ -51,7 +51,7 @@ class ProductPagesChapterController extends GetxController {
     productPagesChapterResult.when(
       success: (data) {
         allChapter.assignAll(data);
-        print('capitulos $allChapter');
+        // print('capitulos $allChapter');
         if (allChapter.isEmpty) return;
         selectChapter(allChapter.first);
         update();

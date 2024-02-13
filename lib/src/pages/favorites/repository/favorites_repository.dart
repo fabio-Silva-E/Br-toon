@@ -1,5 +1,6 @@
 import 'package:brasiltoon/src/constants/endpoint.dart';
 import 'package:brasiltoon/src/models/category_favorite_model.dart';
+import 'package:brasiltoon/src/models/favoritecount_models.dart';
 
 import 'package:brasiltoon/src/models/favorites_models.dart';
 import 'package:brasiltoon/src/pages/favorites/result/favorites_result.dart';
@@ -62,33 +63,29 @@ class FavoritesRepository {
     }
   }
 
-  Future<FavoritesResult<List<FavoritesItemModel>>> getAllFavoritesItems({
+  Future<FavoritesResult<List<FavoritesCountItemModel>>> getAllFavoritesItems({
     required String token,
     required String userId,
     // Adicionando title como um parâmetro opcional
   }) async {
     final result = await _httpManager.restRequest(
-      url: Endpoints.getFavoritesItems,
+      url: Endpoints.getAllFavoritesItems,
       method: HttpMethods.post,
       headers: {
         'X-Parse-Session-Token': token,
       },
       body: {
         'user': userId,
-        "page": 0,
-        "itemsPerPage": null,
-        "title": null,
-        "categoryId": null
       },
     );
 
     if (result['result'] != null) {
-      List<FavoritesItemModel> data =
+      List<FavoritesCountItemModel> data =
           List<Map<String, dynamic>>.from(result['result'])
-              .map(FavoritesItemModel.fromJson)
+              .map(FavoritesCountItemModel.fromJson)
               .toList();
-
-      return FavoritesResult<List<FavoritesItemModel>>.success(data);
+      print(data);
+      return FavoritesResult<List<FavoritesCountItemModel>>.success(data);
     } else {
       return FavoritesResult.error(
           'Ocorreu um erro ao recuperar as histórias de seus favoritos');

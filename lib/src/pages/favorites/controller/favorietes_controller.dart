@@ -1,4 +1,5 @@
 import 'package:brasiltoon/src/models/category_favorite_model.dart';
+import 'package:brasiltoon/src/models/favoritecount_models.dart';
 import 'package:brasiltoon/src/pages/home/controller/home_controller.dart';
 import 'package:brasiltoon/src/pages/home/repository/home_repository.dart';
 import 'package:get/get.dart';
@@ -29,7 +30,7 @@ class FavoritesController extends GetxController {
   List<FavoritesItemModel> get allProducts => currentCategory?.favorites ?? [];
   RxString searchTitle = ''.obs;
   // List<FavoritesItemModel> allFavorites = [];
-  List<FavoritesItemModel> favoritesCount = [];
+  List<FavoritesCountItemModel> favoritesCount = [];
   List<FavoritesItemModel> favoriteItems = [];
   final authController = Get.find<AuthController>();
   List<ItemModel> items = [];
@@ -208,8 +209,8 @@ class FavoritesController extends GetxController {
     );
   }
 
-  Future<List<FavoritesItemModel>> getAllFavoritesItems() async {
-    final FavoritesResult<List<FavoritesItemModel>> result =
+  Future<List<FavoritesCountItemModel>> getAllFavoritesItems() async {
+    final FavoritesResult<List<FavoritesCountItemModel>> result =
         await favoritesRepository.getAllFavoritesItems(
       token: authController.user.token!,
       userId: authController.user.id!,
@@ -299,12 +300,12 @@ class FavoritesController extends GetxController {
   }
 
   Future<bool> isItemFavorite(ItemModel item) async {
-    List<FavoritesItemModel> favoriteItems = await getAllFavoritesItems();
+    List<FavoritesCountItemModel> favoritesCount = await getAllFavoritesItems();
     // print('favoritados ${favoriteItems.length}');
     // print('items $item');
 
-    bool isFavorite =
-        favoriteItems.any((favoriteItem) => favoriteItem.item.id == item.id);
+    bool isFavorite = favoritesCount
+        .any((favoriteItem) => favoriteItem.product.id == item.id);
     //print('isFavorite: $isFavorite');
 
     return isFavorite;
