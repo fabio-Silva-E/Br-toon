@@ -40,4 +40,27 @@ class ProductChapterRepository {
           'ocorreu um erro inesperado ao recuperar os capitulos');
     }
   }
+
+  Future<int> chapterCount({
+    required String user,
+    required String token,
+    required String productId,
+  }) async {
+    final result = await _httpManager.restRequest(
+      url: Endpoints.getChapterCount,
+      method: HttpMethods.post,
+      body: {
+        'user': user,
+        'productId': productId,
+      },
+      headers: {
+        'X-Parse-Session-Token': token,
+      },
+    );
+    if (result['result'] != null) {
+      return result['result']['itemCount'];
+    } else {
+      throw Exception('erro ao recuperar  as paginas');
+    }
+  }
 }

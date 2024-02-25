@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:brasiltoon/src/pages/common_widgets/build_text_field.dart';
+import 'package:brasiltoon/src/pages/common_widgets/showOrderConfirmation_widgest.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phosphor_icons/flutter_phosphor_icons.dart';
 import 'package:get/get.dart';
 import 'package:brasiltoon/src/pages/publish_product/chapters_product/controller/publish_chapter_controller.dart';
 import 'package:brasiltoon/src/services/util_services.dart';
@@ -43,28 +46,45 @@ class _PublishChapterTabState extends State<PublishChapterTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Capitulo'),
+        backgroundColor: Colors.black,
+        title: const Text(
+          'Capitulo',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
         automaticallyImplyLeading: false,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              buildTextField(
+              BuildTextField(
                 controller: titleController,
                 label: 'Título ',
+                icon: PhosphorIcons.pencil,
               ),
               ListTile(
                 leading: const Icon(Icons.attach_file),
-                title: const Text(' capa'),
+                title: const Text(
+                  ' capa',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
                 onTap: () => uploadImage(),
                 trailing: getImageWidget(),
               ),
-              buildTextField(
+              BuildTextField(
                 controller: descriptionController,
                 label: 'Descrição da história',
+                icon: PhosphorIcons.pencil,
               ),
               const SizedBox(height: 20),
               SizedBox(
@@ -74,28 +94,38 @@ class _PublishChapterTabState extends State<PublishChapterTab> {
                       ? null
                       : () async {
                           FocusScope.of(context).unfocus();
-                          // Verificar se todos os campos obrigatórios estão preenchidos
-                          if (capa != null &&
-                              titleController.text.isNotEmpty &&
-                              descriptionController.text.isNotEmpty) {
-                            // Realizar o upload da capa e publicar
-                            String imagePath = await chapterController
-                                .saveImageToAppDirectory(File(capa!.path));
+                          bool? result =
+                              await ShowOrderConfirmation.showOrderConfirmation(
+                                  context,
+                                  'Esta certo de que quer publicar esse capitulo?',
+                                  'sim',
+                                  'não');
+                          if (result ?? false) {
+                            // Verificar se todos os campos obrigatórios estão preenchidos
+                            if (capa != null &&
+                                titleController.text.isNotEmpty &&
+                                descriptionController.text.isNotEmpty) {
+                              // Realizar o upload da capa e publicar
+                              String imagePath = await chapterController
+                                  .saveImageToAppDirectory(File(capa!.path));
 
-                            chapterController.publishChapter(
-                              title: titleController.text,
-                              cape: imagePath,
-                              description: descriptionController.text,
-                              productId: widget.productId,
-                            );
+                              chapterController.publishChapter(
+                                title: titleController.text,
+                                cape: imagePath,
+                                description: descriptionController.text,
+                                productId: widget.productId,
+                              );
+                            } else {
+                              // Mostrar mensagem de erro se algum campo estiver vazio
+                              utilsServices.showToast(
+                                message:
+                                    'Preencha todos os campos antes de publicar.',
+                                isError: true,
+                              );
+                            }
                           } else {
-                            print(
-                                'Preencha todos os campos antes de publicar.');
-                            // Mostrar mensagem de erro se algum campo estiver vazio
                             utilsServices.showToast(
-                              message:
-                                  'Preencha todos os campos antes de publicar.',
-                              isError: true,
+                              message: 'Atualização não concluida',
                             );
                           }
                         },
@@ -105,29 +135,6 @@ class _PublishChapterTabState extends State<PublishChapterTab> {
                 ),
               )),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildTextField({
-    required TextEditingController controller,
-    required String label,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 32,
-        vertical: 40,
-      ),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          filled: true,
-          fillColor: Colors.white,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
           ),
         ),
       ),

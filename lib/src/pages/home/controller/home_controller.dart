@@ -145,7 +145,7 @@ class HomeController extends GetxController {
     result.when(
       success: (data) {
         currentCategory!.items.addAll(data);
-        // print('home $data');
+        //  print('home $data');
         update();
       },
       error: (message) {

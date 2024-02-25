@@ -1,6 +1,7 @@
 import 'package:brasiltoon/src/config/custom_colors.dart';
 import 'package:brasiltoon/src/pages/cart/controller/cart_controller.dart';
 import 'package:brasiltoon/src/pages/cart/view/components/cart_tile.dart';
+import 'package:brasiltoon/src/pages/common_widgets/showOrderConfirmation_widgest.dart';
 import 'package:brasiltoon/src/services/util_services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,8 +21,17 @@ class _CartTabState extends State<CartTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Carrinho'),
+        backgroundColor: Colors.black,
+        title: const Text(
+          'Carrinho',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
       ),
+      backgroundColor: Colors.black,
       body: Column(
         children: [
           // Lista de itens do carrinho
@@ -36,7 +46,14 @@ class _CartTabState extends State<CartTab> {
                         size: 40,
                         color: CustomColors.customSwatchColor,
                       ),
-                      const Text('Não há moedas no carrinho'),
+                      const Text(
+                        'Não há moedas no carrinho',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
                     ]);
               }
               return ListView.builder(
@@ -111,7 +128,12 @@ class _CartTabState extends State<CartTab> {
                                 controller.cartCoins.isEmpty)
                             ? null
                             : () async {
-                                bool? result = await showOrderConfirmation();
+                                bool? result = await ShowOrderConfirmation
+                                    .showOrderConfirmation(
+                                        context,
+                                        'Deseja realmente concluir a compra no app?',
+                                        'sim',
+                                        'não');
 
                                 if (result ?? false) {
                                   cartController.checkoutCart();
@@ -138,40 +160,6 @@ class _CartTabState extends State<CartTab> {
           ),
         ],
       ),
-    );
-  }
-
-  Future<bool?> showOrderConfirmation() {
-    return showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: const Text('Confirmação'),
-          content: const Text('Deseja realmente concluir a compra no app?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-              child: const Text('Não'),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              child: const Text('Sim'),
-            ),
-          ],
-        );
-      },
     );
   }
 }

@@ -110,7 +110,7 @@ class CapeProductController extends GetxController {
       homeController.addItem(category: category, item: item);
       publisherController.addItem(category: category, item: item);
       Get.to(() => PublishChapterTab(productId: productId));
-      print('Success! Product ID: $productId');
+      // print('Success! Product ID: $productId');
       update();
     }, error: (message) {
       utilsServices.showToast(

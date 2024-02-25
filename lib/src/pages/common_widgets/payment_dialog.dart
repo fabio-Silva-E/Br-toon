@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:brasiltoon/src/models/order_model.dart';
 import 'package:brasiltoon/src/services/util_services.dart';
 
-import 'package:mercadopago_sdk/mercadopago_sdk.dart';
+//import 'package:mercadopago_sdk/mercadopago_sdk.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-var mp = MP.fromAccessToken(
-    "TEST-3245657067712792-011116-29e91066ea43bc5d79d4746dbe51ef13-232371830");
+//var mp = MP.fromAccessToken(
+//   "TEST-3245657067712792-011116-29e91066ea43bc5d79d4746dbe51ef13-232371830");
 
 class PaymentDialog extends StatelessWidget {
   final OrderModel order;

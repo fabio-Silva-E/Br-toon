@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:brasiltoon/src/config/custom_colors.dart';
 import 'package:brasiltoon/src/models/chapter_models.dart';
+import 'package:brasiltoon/src/pages/common_widgets/build_text_field.dart';
+import 'package:brasiltoon/src/pages/common_widgets/showOrderConfirmation_widgest.dart';
 import 'package:brasiltoon/src/pages/story_editing/controller/editing_controller.dart';
 import 'package:brasiltoon/src/pages/story_editing/edit_screen/select_page_to_editi.dart';
 import 'package:brasiltoon/src/services/util_services.dart';
@@ -63,15 +65,26 @@ class _EditingChapterTabState extends State<EditingChapterTab> {
     String caminho = widget.chapter.chaptersUrls;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Editar Capitulo'),
+        backgroundColor: Colors.black,
+        title: const Text(
+          'Editar Capitulo',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
       ),
+      backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            buildTextField(
+            const SizedBox(height: 20),
+            BuildTextField(
               controller: titleController,
               label: 'Título',
+              icon: PhosphorIcons.pencil,
             ),
             Stack(
               children: [
@@ -102,9 +115,11 @@ class _EditingChapterTabState extends State<EditingChapterTab> {
                 ),
               ],
             ),
-            buildTextField(
+            const SizedBox(height: 10),
+            BuildTextField(
               controller: descriptionController,
               label: 'Descrição do capitulo',
+              icon: PhosphorIcons.pencil,
             ),
             const SizedBox(height: 10),
             SizedBox(
@@ -119,7 +134,12 @@ class _EditingChapterTabState extends State<EditingChapterTab> {
                         ? null
                         : () async {
                             FocusScope.of(context).unfocus();
-                            bool? result = await showOrderConfirmation();
+                            bool? result = await ShowOrderConfirmation
+                                .showOrderConfirmation(
+                                    context,
+                                    'dejesa continuar esta ação!',
+                                    'continuar',
+                                    'desistir');
                             if (result ?? false) {
                               if (imageFile != null) {
                                 await editingControler.editeImage(
@@ -133,7 +153,6 @@ class _EditingChapterTabState extends State<EditingChapterTab> {
                             } else {
                               utilsServices.showToast(
                                 message: 'Atualizção não concluida',
-                                isError: true,
                               );
                             }
                           },
@@ -174,34 +193,6 @@ class _EditingChapterTabState extends State<EditingChapterTab> {
     );
   }
 
-  Widget buildTextField({
-    required TextEditingController controller,
-    required String label,
-    // required PhosphorIcons icon,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 32,
-        vertical: 40,
-      ),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          filled: true,
-          fillColor: Colors.white,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          prefixIcon: const Icon(
-            PhosphorIcons.pencil,
-            // outras propriedades do ícone, se necessário
-          ),
-        ),
-      ),
-    );
-  }
-
   Future<void> uploadImage() async {
     final ImagePicker picker = ImagePicker();
     try {
@@ -212,39 +203,5 @@ class _EditingChapterTabState extends State<EditingChapterTab> {
     } catch (e) {
       print(e);
     }
-  }
-
-  Future<bool?> showOrderConfirmation() {
-    return showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: const Text('Comfirmação'),
-          content: const Text('Deseja realmente comfirmar a alteração'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-              child: const Text('não'),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              child: const Text('sim'),
-            ),
-          ],
-        );
-      },
-    );
   }
 }

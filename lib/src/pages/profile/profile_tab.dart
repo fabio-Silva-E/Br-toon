@@ -24,7 +24,15 @@ class _ProfileTabState extends State<ProfileTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Perfil do usuario'),
+        backgroundColor: Colors.black,
+        title: const Text(
+          'Perfil do usuario',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -36,6 +44,7 @@ class _ProfileTabState extends State<ProfileTab> {
           )
         ],
       ),
+      backgroundColor: Colors.black,
       body: ListView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(16, 32, 16, 16),
@@ -48,7 +57,7 @@ class _ProfileTabState extends State<ProfileTab> {
                 children: [
                   CircleAvatar(
                     radius: 75,
-                    backgroundColor: const Color.fromARGB(99, 71, 67, 67),
+                    backgroundColor: Colors.redAccent,
                     child: CircleAvatar(
                       radius: 65,
                       backgroundColor: Colors.grey[300],
@@ -78,6 +87,7 @@ class _ProfileTabState extends State<ProfileTab> {
               ),
             ],
           ),
+          const SizedBox(height: 10),
           //botão de atualizar foto
           SizedBox(
             height: 45,
@@ -99,6 +109,7 @@ class _ProfileTabState extends State<ProfileTab> {
                       : const Text('Atualizar foto'),
                 )),
           ),
+          const SizedBox(height: 10),
           //email
           CustomTextField(
             readeOnly: true,

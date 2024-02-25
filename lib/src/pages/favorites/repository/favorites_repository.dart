@@ -84,7 +84,7 @@ class FavoritesRepository {
           List<Map<String, dynamic>>.from(result['result'])
               .map(FavoritesCountItemModel.fromJson)
               .toList();
-      print(data);
+      // print(data);
       return FavoritesResult<List<FavoritesCountItemModel>>.success(data);
     } else {
       return FavoritesResult.error(

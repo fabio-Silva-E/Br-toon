@@ -10,6 +10,8 @@ String authErrorString(String? code) {
       return 'Ocorreu um erro ao se cadastrar:celular invalido ';
     case 'INVALID_CPF':
       return 'Ocorreu um erro ao se cadastrar: cpf invalido';
+    case 'INVALID_USER':
+      return 'Editor não emcontrado';
     default:
       return 'Um erro indefinido ocorreu!';
   }

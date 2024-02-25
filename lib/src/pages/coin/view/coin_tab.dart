@@ -42,10 +42,17 @@ class _CoinTabState extends State<CoinTab> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.black,
           elevation: 0,
           centerTitle: true,
-          title: const Text('Coins'),
+          title: const Text(
+            'Coins',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
           actions: [
             Padding(
               padding: const EdgeInsets.only(
@@ -86,10 +93,10 @@ class _CoinTabState extends State<CoinTab> {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.black,
                 borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(30),
-                ),
+                    // top: Radius.circular(30),
+                    ),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.shade300,
@@ -103,7 +110,11 @@ class _CoinTabState extends State<CoinTab> {
                 children: [
                   const Text(
                     'minhas moedas',
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                   GetBuilder<CoinController>(
                     builder: (controller) {
@@ -126,7 +137,11 @@ class _CoinTabState extends State<CoinTab> {
                     children: [
                       Text(
                         'loja de moedas',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),
@@ -135,6 +150,7 @@ class _CoinTabState extends State<CoinTab> {
             ),
           ),
         ),
+        backgroundColor: Colors.black,
         body: Column(
           children: [
             // Lista de itens do carrinho
@@ -152,27 +168,27 @@ class _CoinTabState extends State<CoinTab> {
             ),
 
             // Total e botão de concluir o pedido
-            Container(
+            /*  Container(
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: const BorderRadius.vertical(
+                borderRadius: BorderRadius.vertical(
                   top: Radius.circular(30),
                 ),
-                boxShadow: [
+                /*   boxShadow: [
                   BoxShadow(
                     color: Colors.grey.shade300,
                     blurRadius: 3,
                     spreadRadius: 2,
                   ),
-                ],
+                ],*/
               ),
-            ),
+            ),*/
             //botão do carrinho
             SizedBox(
               height: 50,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(

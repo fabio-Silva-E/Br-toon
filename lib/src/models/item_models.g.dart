@@ -8,6 +8,9 @@ part of 'item_models.dart';
 
 ItemModel _$ItemModelFromJson(Map<String, dynamic> json) => ItemModel(
       id: json['id'] as String? ?? '',
+      userId: json['user'] == null
+          ? null
+          : UserModel.fromJson(json['user'] as Map<String, dynamic>),
       description: json['description'] as String,
       imgUrl: json['cape'] as String,
       itemName: json['title'] as String,
@@ -22,6 +25,7 @@ Map<String, dynamic> _$ItemModelToJson(ItemModel instance) => <String, dynamic>{
       'id': instance.id,
       'title': instance.itemName,
       'cape': instance.imgUrl,
+      'user': instance.userId,
       'description': instance.description,
       'chapters': instance.chapters,
       'pagination': instance.pagination,

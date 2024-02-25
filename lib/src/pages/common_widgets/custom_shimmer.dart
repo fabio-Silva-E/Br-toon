@@ -25,15 +25,15 @@ class CustomShimmer extends StatelessWidget {
       width: width,
       height: height,
       child: Shimmer.fromColors(
+        baseColor: baseColor ?? Colors.blue.shade800,
+        highlightColor: highlightColor ?? Colors.blue.shade500,
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white.withAlpha(50),
+            color: Colors.black,
             borderRadius: borderRadius ??
                 BorderRadius.circular(isRounded ? height / 2 : 0),
           ),
         ),
-        baseColor: baseColor ?? Colors.blue.shade800,
-        highlightColor: highlightColor ?? Colors.blue.shade500,
       ),
     );
   }

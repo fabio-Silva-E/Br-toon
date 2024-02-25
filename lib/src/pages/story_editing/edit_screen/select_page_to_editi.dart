@@ -22,18 +22,21 @@ class _SelectPageToEditingState extends State<SelectPageToEditing> {
   final UtilsServices utilsServices = UtilsServices();
   final ProductPagesChapterController controller =
       Get.put(ProductPagesChapterController(chapterId: ''));
-
+  late bool _isLoading;
   @override
   void initState() {
     super.initState();
+    _isLoading = true;
     _loadPages(); // Chama a função que carrega os capítulos
   }
 
 // Função para carregar os capítulos de forma assíncrona
   Future<void> _loadPages() async {
     // Aguarda a conclusão da operação assíncrona
-    await controller.getAllPages(widget.chapterId);
-
+    await controller.getAllPagesToEditor(widget.chapterId);
+    setState(() {
+      _isLoading = false;
+    });
     // Após a conclusão, você pode imprimir os capítulos
     //print('Capítulos carregados: ${controller.allChapters}');
   }
@@ -42,10 +45,17 @@ class _SelectPageToEditingState extends State<SelectPageToEditing> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         elevation: 0,
         centerTitle: true,
-        title: const Text('paginas'),
+        title: const Text(
+          'paginas',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
         bottom: const PreferredSize(
           preferredSize: Size.fromHeight(16), // Ajuste conforme necessário
 
@@ -54,45 +64,61 @@ class _SelectPageToEditingState extends State<SelectPageToEditing> {
             children: [
               Text(
                 'selecione a pagina que dejesa editar',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ],
           ),
         ),
       ),
       //  ),
-      body: Column(
-        children: [
-          // Lista de itens do carrinho
-          Expanded(
-            child: GetBuilder<ProductPagesChapterController>(
-                builder: (controller) {
-              if (controller.allPages.isEmpty) {
-                return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.search_off,
-                        size: 40,
-                        color: CustomColors.customSwatchColor,
-                      ),
-                      const Text('Não a paginas postadas'),
-                    ]);
-              }
-              return ListView.builder(
-                itemCount: controller.allPages.length,
-                itemBuilder: (_, index) {
-                  return SelectPageTile(
-                    page: controller.allPages[index],
-                    chapterId: widget.chapterId,
-                    index: index + 1,
-                    // page: widget.item,
-                  );
-                },
-              );
-            }),
-          ),
-          Container(
+      backgroundColor: Colors.black,
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Column(
+              children: [
+                // Lista de itens do carrinho
+                Expanded(
+                  child: GetBuilder<ProductPagesChapterController>(
+                      builder: (controller) {
+                    if (controller.allPagesOfEditor.isEmpty) {
+                      return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.search_off,
+                              size: 40,
+                              color: CustomColors.customSwatchColor,
+                            ),
+                            const Text(
+                              'Não a paginas postadas',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ]);
+                    }
+                    return ListView.builder(
+                      itemCount: controller.allPagesOfEditor.length,
+                      itemBuilder: (_, index) {
+                        return SelectPageTile(
+                          page: controller.allPagesOfEditor[index],
+                          chapterId: widget.chapterId,
+                          index: index + 1,
+                          // page: widget.item,
+                        );
+                      },
+                    );
+                  }),
+                ),
+                /* Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -107,31 +133,34 @@ class _SelectPageToEditingState extends State<SelectPageToEditing> {
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            //crossAxisAlignment: CrossAxisAlignment.stretch,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CustomColors.customSwatchColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+          ),*/
+                const SizedBox(height: 10),
+                Center(
+                  child: SizedBox(
+                    //crossAxisAlignment: CrossAxisAlignment.stretch,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: CustomColors.customSwatchColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      onPressed: () async {
+                        Get.to(
+                            () => PublishPageTab(chapterId: widget.chapterId));
+                        // print(widget.item.id);
+                      },
+                      child: const Text(
+                        'Adicionar pagina',
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              onPressed: () async {
-                Get.to(() => PublishPageTab(chapterId: widget.chapterId));
-                // print(widget.item.id);
-              },
-              child: const Text(
-                'Adicionar pagina',
-                style: TextStyle(
-                  fontSize: 18,
-                ),
-              ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

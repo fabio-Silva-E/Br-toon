@@ -1,8 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 //import 'dart:io';
 
-import 'package:brasiltoon/src/models/chapter_models.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'package:brasiltoon/src/models/chapter_models.dart';
+import 'package:brasiltoon/src/models/user_models.dart';
 
 part 'item_models.g.dart';
 
@@ -13,8 +15,8 @@ class ItemModel {
   String itemName;
   @JsonKey(name: 'cape')
   String imgUrl;
-  //@JsonKey(includeToJson: false, includeFromJson: false)
-  //File file;
+  @JsonKey(name: 'user')
+  UserModel? userId;
   String description;
   @JsonKey(defaultValue: [])
   List<ChapterItemModel> chapters; // Lista de URLs de imagens
@@ -23,7 +25,7 @@ class ItemModel {
 
   ItemModel({
     this.id = '',
-    // required this.file,
+    this.userId,
     required this.description,
     required this.imgUrl,
     required this.itemName,
@@ -42,6 +44,6 @@ class ItemModel {
       other is ItemModel && runtimeType == other.runtimeType && id == other.id;
   @override
   String toString() {
-    return 'ItemModel(id: $id, itemName: $itemName, imgUrl: $imgUrl, description: $description, chapters: $chapters, pagination: $pagination)';
+    return 'ItemModel(id: $id, itemName: $itemName, imgUrl: $imgUrl, userId: $userId, description: $description, chapters: $chapters, pagination: $pagination)';
   }
 }

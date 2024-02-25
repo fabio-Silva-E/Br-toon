@@ -15,7 +15,7 @@ class AuthController extends GetxController {
   final authRepository = AuthRepository();
   final utilsServices = UtilsServices();
   UserModel user = UserModel();
-
+  UserModel editor = UserModel();
   @override
   void onInit() {
     super.onInit();
@@ -87,12 +87,12 @@ class AuthController extends GetxController {
       //salvar token
       utilsServices.saveLocalDate(key: StorageKeys.token, date: user.token!);
       //ir para tela base
-      print('token');
-      print(user.token);
+      //  print('token');
+      //  print(user.token);
       Get.offAllNamed(PagesRoutes.baseRoute);
     } else {
       // Faça algo se o token for nulo, como exibir uma mensagem de erro
-      print('Erro: O token do usuário é nulo');
+      //  print('Erro: O token do usuário é nulo');
     }
   }
 
@@ -128,7 +128,7 @@ class AuthController extends GetxController {
         saveTokenAndProceedToBase(user.token);
       },
       error: (message) {
-        print(message);
+        // print(message);
         utilsServices.showToast(
           message: message,
           isError: true,
@@ -172,7 +172,7 @@ class AuthController extends GetxController {
       // Outras ações ou atualizações necessárias
 
       // Retorna o URL completo da imagem
-      print(imagePath);
+      // print(imagePath);
       setLoading.value = false;
     } catch (e) {
       // Lida com erros durante a modificação
@@ -180,7 +180,7 @@ class AuthController extends GetxController {
         message: 'Erro durante a modificação da imagem: $e',
         isError: true,
       );
-      print('Erro durante a modificação da imagem: $e');
+      //  print('Erro durante a modificação da imagem: $e');
       setLoading.value = false;
     }
   }
@@ -215,7 +215,7 @@ class AuthController extends GetxController {
       String imagePath = await storageReference.getDownloadURL();
 
       // Retorna o URL completo da imagem
-      print(imagePath);
+      // print(imagePath);
       return imagePath;
     } catch (e) {
       // Lida com erros durante o upload
@@ -223,7 +223,7 @@ class AuthController extends GetxController {
         message: 'Erro durante o upload da imagem: $e',
         isError: true,
       );
-      print('Erro durante o upload da imagem: $e');
+      //   print('Erro durante o upload da imagem: $e');
       return '';
     }
   }

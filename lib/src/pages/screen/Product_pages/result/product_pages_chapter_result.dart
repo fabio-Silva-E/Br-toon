@@ -4,6 +4,6 @@ part 'product_pages_chapter_result.freezed.dart';
 
 @freezed
 class ProductPagesChapterResult<T> with _$ProductPagesChapterResult<T> {
-  factory ProductPagesChapterResult.success(List<T> data) = Success;
+  factory ProductPagesChapterResult.success(T data) = Success;
   factory ProductPagesChapterResult.error(String message) = Error;
 }

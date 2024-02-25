@@ -1,6 +1,8 @@
-const String baseUrl = 'https://parseapi.back4app.com/functions';
+//const String baseUrl = 'https://parseapi.back4app.com/functions';
+const String baseUrl = 'http://localhost:1337/parse/functions';
 
 abstract class Endpoints {
+  static const String perfil = '$baseUrl/perfil';
   static const String signin = '$baseUrl/login';
   static const String signup = '$baseUrl/signup';
   static const String validateToken = '$baseUrl/validate-token';
@@ -30,4 +32,7 @@ abstract class Endpoints {
   static const String getCoinsOfUser = '$baseUrl/get-coins-of-user';
   static const String getFavoriteCount = '$baseUrl/get-favorite-count';
   static const String getAllFavoritesItems = '$baseUrl/get-all-favorite-items';
+  static const String getChapterCount = '$baseUrl/get-chapters-count';
+  static const String getPageCount = '$baseUrl/get-pages-count';
+  static const String addPageCount = '$baseUrl/add-page-count';
 }

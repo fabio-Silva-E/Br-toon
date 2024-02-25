@@ -75,7 +75,7 @@ class EditingController extends GetxController {
       // Referência ao caminho no Firebase Storage
       Reference storageReference =
           FirebaseStorage.instance.ref().child(modifiedPath);
-      print('imagem para modificação $modifiedPath');
+      // print('imagem para modificação $modifiedPath');
       // Envia o novo arquivo para substituir o existente
       await storageReference.putFile(newImage);
 
@@ -88,7 +88,7 @@ class EditingController extends GetxController {
       // Outras ações ou atualizações necessárias
 
       // Retorna o URL completo da imagem
-      print(' imagem modificada $imagePath');
+      //  print(' imagem modificada $imagePath');
       isLoading.value = false;
     } catch (e) {
       // Lida com erros durante a modificação
@@ -124,7 +124,8 @@ class EditingController extends GetxController {
 
       // Se a operação foi bem-sucedida, você pode prosseguir com outras ações
       utilsServices.showToast(
-        message: 'Os dados da historia foram alterados para\n $data',
+        message:
+            'Os dados da historia alterados com sucesso!', //'Os dados da historia foram alterados para\n $data',
       );
       // print('Success!: $data');
     }, error: (message) {
@@ -152,7 +153,33 @@ class EditingController extends GetxController {
     result.when(success: (data) {
       // Se a operação foi bem-sucedida, você pode prosseguir com outras ações
       utilsServices.showToast(
-        message: 'os dados do capitulo foram alterados para\n $data',
+        message:
+            'Capitulo alterado com sucesso!', //'os dados do capitulo foram alterados para\n $data',
+      );
+      // print('Success!: $data');
+    }, error: (message) {
+      utilsServices.showToast(
+        message: message,
+        isError: true,
+      );
+    });
+  }
+
+  Future<void> editePage({
+    required String pageId,
+  }) async {
+    isLoading.value = true;
+    final EditiResult<String> result = await editingRepository.editePage(
+      userId: authController.user.id!,
+      token: authController.user.token!,
+      pageId: pageId,
+    );
+    isLoading.value = false;
+    result.when(success: (data) {
+      // Se a operação foi bem-sucedida, você pode prosseguir com outras ações
+      utilsServices.showToast(
+        message:
+            'Pagina alterada com sucesso!', //'os dados do capitulo foram alterados para\n $data',
       );
       // print('Success!: $data');
     }, error: (message) {

@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:brasiltoon/src/pages/base/controller/navigation_controller.dart';
+import 'package:brasiltoon/src/pages/common_widgets/showOrderConfirmation_widgest.dart';
+import 'package:brasiltoon/src/pages/screen/Product_pages/controller/product_pages_chapter_controller.dart';
 import 'package:brasiltoon/src/pages/splash/splash_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -40,10 +42,17 @@ class _PublishPageTabState extends State<PublishPageTab> {
   final navigationController = Get.find<NavigationController>();
   XFile? pagina;
   final pageController = Get.find<PublishPageController>();
+  final pages = Get.find<ProductPagesChapterController>();
+  @override
+  void initState() {
+    super.initState();
+    pageCount = pages.allPagesOfEditor.length + 1;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -54,17 +63,25 @@ class _PublishPageTabState extends State<PublishPageTab> {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 alignment: Alignment.center,
                 child: const Text(
-                  'Pagina',
+                  'Publicar paginas',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
               ),
 
               ListTile(
                 leading: const Icon(Icons.attach_file),
-                title: const Text(' pagina'),
+                title: const Text(
+                  ' pagina',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
                 onTap: () => uploadImage(),
                 trailing: getImageWidget(),
               ),
@@ -75,33 +92,43 @@ class _PublishPageTabState extends State<PublishPageTab> {
                           ? null
                           : () async {
                               FocusScope.of(context).unfocus();
-                              // Verificar se todos os campos obrigatórios estão preenchidos
-                              if (pagina != null) {
-                                // Realizar o upload da capa e publicar
-                                String imagePath = await pageController
-                                    .saveImageToAppDirectory(
-                                        File(pagina!.path));
-                                setState(() {
-                                  pageCount++;
-                                });
-                                pageController.publishPages(
-                                  page: imagePath,
-                                  chapterId: widget.chapterId,
-                                );
+                              bool? result = await ShowOrderConfirmation
+                                  .showOrderConfirmation(
+                                      context,
+                                      'Esta certo que quer publicar esta pagina?',
+                                      'sim',
+                                      'não');
+                              if (result ?? false) {
+                                // Verificar se todos os campos obrigatórios estão preenchidos
+                                if (pagina != null) {
+                                  // Realizar o upload da capa e publicar
+                                  String imagePath = await pageController
+                                      .saveImageToAppDirectory(
+                                          File(pagina!.path));
+                                  setState(() {
+                                    pageCount++;
+                                  });
+                                  pageController.publishPages(
+                                    page: imagePath,
+                                    chapterId: widget.chapterId,
+                                  );
+                                } else {
+                                  // Mostrar mensagem de erro se algum campo estiver vazio
+                                  utilsServices.showToast(
+                                    message:
+                                        'Preencha todos os campos antes de publicar.',
+                                    isError: true,
+                                  );
+                                }
                               } else {
-                                print(
-                                    'Preencha todos os campos antes de publicar.');
-                                // Mostrar mensagem de erro se algum campo estiver vazio
                                 utilsServices.showToast(
-                                  message:
-                                      'Preencha todos os campos antes de publicar.',
-                                  isError: true,
+                                  message: 'Atualização não concluida',
                                 );
                               }
                             },
                       child: pageController.isloading.value
                           ? const CircularProgressIndicator()
-                          : Text('Publicar página $pageCount'),
+                          : Text('Publicar $pageCount° pagina'),
                     )),
               ),
               TextButton(

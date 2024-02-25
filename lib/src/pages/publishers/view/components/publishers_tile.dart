@@ -1,4 +1,6 @@
 import 'package:brasiltoon/src/config/custom_colors.dart';
+import 'package:brasiltoon/src/constants/border_radius.dart';
+import 'package:brasiltoon/src/pages/common_widgets/card_widgest.dart';
 import 'package:brasiltoon/src/pages/story_editing/edit_screen/editi_cover_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phosphor_icons/flutter_phosphor_icons.dart';
@@ -35,7 +37,11 @@ class _PublishersTileState extends State<PublishersTile> {
                   item: widget.publishersItem,
                 ));
           },
-          child: Card(
+          child: CustomCardWidget(
+            imageUrl: widget.publishersItem.imgUrl,
+            itemName: widget.publishersItem.itemName,
+          ),
+/*Card(
             elevation: 3,
             shadowColor: Colors.grey.shade100,
             shape: RoundedRectangleBorder(
@@ -72,30 +78,34 @@ class _PublishersTileState extends State<PublishersTile> {
                 ],
               ),
             ),
-          ),
+          ),*/
         ),
         //botão editar
         Positioned(
           top: 4,
           right: 4,
           child: GestureDetector(
-            onTap: () {
+            onTap: () async {
+              /*  bool? result = await ShowOrderConfirmation.showOrderConfirmation(
+                  context,
+                  'Sera usado moedas de sua carteira Brasiltoon para as proximas ações',
+                  'continuar ?',
+                  'sair');
+              if (result ?? false) {*/
               Get.to(() => EditingCapeTab(
                     productId:
                         widget.publishersItem.id, // Passa o ID do produto
                     item: widget.publishersItem,
                     category: controller.currentCategory!.id,
                   ));
+              //   }
             },
             child: Container(
-              height: 40,
+              height: 35,
               width: 35,
               decoration: BoxDecoration(
                 color: CustomColors.customSwatchColor,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(15),
-                  topRight: Radius.circular(20),
-                ),
+                borderRadius: BorderRadius.circular(Border_Radius.circular),
               ),
               child: const Icon(
                 PhosphorIcons.pencil,

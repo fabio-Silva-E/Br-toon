@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:brasiltoon/src/config/custom_colors.dart';
+import 'package:brasiltoon/src/pages/common_widgets/build_text_field.dart';
+import 'package:brasiltoon/src/pages/common_widgets/showOrderConfirmation_widgest.dart';
 import 'package:brasiltoon/src/pages/story_editing/controller/editing_controller.dart';
 import 'package:brasiltoon/src/pages/story_editing/edit_screen/select_chapter_to_editing_tab.dart';
 import 'package:brasiltoon/src/services/util_services.dart';
@@ -75,15 +77,26 @@ void didUpdateWidget(covariant EditingCapeTab oldWidget) {
     String caminho = widget.item.imgUrl;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Editar Capa'),
+        backgroundColor: Colors.black,
+        title: const Text(
+          'Editar Capa',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
       ),
+      backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            buildTextField(
+            const SizedBox(height: 20),
+            BuildTextField(
               controller: titleController,
               label: 'Título',
+              icon: PhosphorIcons.pencil,
             ),
             Stack(
               children: [
@@ -113,9 +126,11 @@ void didUpdateWidget(covariant EditingCapeTab oldWidget) {
                 ),
               ],
             ),
-            buildTextField(
+            const SizedBox(height: 10),
+            BuildTextField(
               controller: descriptionController,
               label: 'Descrição da história',
+              icon: PhosphorIcons.pencil,
             ),
             buildCategoryDropdown(),
             const SizedBox(height: 20),
@@ -134,7 +149,12 @@ void didUpdateWidget(covariant EditingCapeTab oldWidget) {
                         ? null
                         : () async {
                             FocusScope.of(context).unfocus();
-                            bool? result = await showOrderConfirmation();
+                            bool? result = await ShowOrderConfirmation
+                                .showOrderConfirmation(
+                                    context,
+                                    'dejesa continuar esta ação!',
+                                    'continuar',
+                                    'não');
                             if (result ?? false) {
                               if (imageFile != null) {
                                 await editingControler.editeImage(
@@ -148,8 +168,7 @@ void didUpdateWidget(covariant EditingCapeTab oldWidget) {
                               );
                             } else {
                               utilsServices.showToast(
-                                message: 'Atualizção não concluida',
-                                isError: true,
+                                message: 'Atualização não concluida',
                               );
                             }
                           },
@@ -196,34 +215,6 @@ void didUpdateWidget(covariant EditingCapeTab oldWidget) {
     );
   }
 
-  Widget buildTextField({
-    required TextEditingController controller,
-    required String label,
-    // required PhosphorIcons icon,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 32,
-        vertical: 40,
-      ),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          filled: true,
-          fillColor: Colors.white,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          prefixIcon: const Icon(
-            PhosphorIcons.pencil,
-            // outras propriedades do ícone, se necessário
-          ),
-        ),
-      ),
-    );
-  }
-
   Future<void> uploadImage() async {
     final ImagePicker picker = ImagePicker();
     try {
@@ -258,6 +249,7 @@ void didUpdateWidget(covariant EditingCapeTab oldWidget) {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
               const SizedBox(height: 8),
@@ -288,40 +280,6 @@ void didUpdateWidget(covariant EditingCapeTab oldWidget) {
               ),
             ],
           ),
-        );
-      },
-    );
-  }
-
-  Future<bool?> showOrderConfirmation() {
-    return showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: const Text('Comfirmação'),
-          content: const Text('Deseja realmente comfirmar a alteração'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-              child: const Text('não'),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              child: const Text('sim'),
-            ),
-          ],
         );
       },
     );

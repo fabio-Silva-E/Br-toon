@@ -1,4 +1,7 @@
+import 'package:brasiltoon/src/constants/border_radius.dart';
+import 'package:brasiltoon/src/pages/common_widgets/card_widgest.dart';
 import 'package:brasiltoon/src/pages/home/controller/home_controller.dart';
+import 'package:brasiltoon/src/pages/profile/editor_profile_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:brasiltoon/src/config/custom_colors.dart';
@@ -11,14 +14,13 @@ class ItemTile extends StatefulWidget {
   final ItemModel item;
   //final List<ItemModel> categoryItems;
   final void Function(GlobalKey) favoritesAnimationMethod;
+
   // final CategoryModel category;
   const ItemTile({
-    super.key,
-    // required this.categoryItems,
+    Key? key,
     required this.item,
     required this.favoritesAnimationMethod,
-    // required this.category,
-  });
+  }) : super(key: key);
 
   @override
   State<ItemTile> createState() => _ItemTileState();
@@ -26,6 +28,7 @@ class ItemTile extends StatefulWidget {
 
 class _ItemTileState extends State<ItemTile> {
   final GlobalKey imageGk = GlobalKey();
+  late void Function(GlobalKey) favoritesAnimationMethod;
   late bool isFavorite;
   bool isCheckingFavorite =
       true; // Adiciona uma variável para rastrear o estado de checagem
@@ -103,50 +106,21 @@ class _ItemTileState extends State<ItemTile> {
                   item: widget.item,
                 ));
           },
-          child: Card(
-            elevation: 3,
-            shadowColor: Colors.grey.shade100,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    child: Image.network(
-                      widget.item.imgUrl,
-                      key: imageGk,
-                    ),
-                  ),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      widget.item.itemName,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          child: CustomCardWidget(
+            imageUrl: widget.item.imgUrl,
+            itemName: widget.item.itemName,
+            imageGk: imageGk,
           ),
         ),
-
-        if (showFavoriteButton) // Verifica se o botão deve ser exibido
+        if (showFavoriteButton)
+          // Verifica se o botão deve ser exibido
           Positioned(
             top: 4,
             right: 4,
             child: Stack(
               children: [
                 ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(15),
-                    topRight: Radius.circular(20),
-                  ),
+                  borderRadius: BorderRadius.circular(Border_Radius.circular),
                   child: Material(
                     child: InkWell(
                       onTap: () {
@@ -155,7 +129,7 @@ class _ItemTileState extends State<ItemTile> {
                         _addToFavorites(widget.item);
                       },
                       child: Ink(
-                        height: 40,
+                        height: 35,
                         width: 35,
                         decoration: BoxDecoration(
                           color: CustomColors.customSwatchColor,
@@ -174,8 +148,8 @@ class _ItemTileState extends State<ItemTile> {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(15),
-                          topRight: Radius.circular(20),
+                          bottomLeft: Radius.circular(Border_Radius.bottomLeft),
+                          topRight: Radius.circular(Border_Radius.topRight),
                         ),
                         color:
                             const Color.fromARGB(255, 0, 0, 0).withOpacity(0.5),
@@ -192,8 +166,31 @@ class _ItemTileState extends State<ItemTile> {
               ],
             ),
           ),
-
-// ...
+        //perfil do editor
+        Positioned(
+          top: 4,
+          left: 4,
+          child: GestureDetector(
+            onTap: () async {
+              Get.to(() => PerfilTab(
+                    userId: widget.item.userId!.id!,
+                  ));
+            },
+            child: Container(
+              height: 35,
+              width: 35,
+              decoration: BoxDecoration(
+                color: CustomColors.customSwatchColor,
+                borderRadius: BorderRadius.circular(Border_Radius.circular),
+              ),
+              child: const Icon(
+                Icons.person_outline,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }

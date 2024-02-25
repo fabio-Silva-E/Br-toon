@@ -38,10 +38,11 @@ class _SelectPageTileState extends State<SelectPageTile> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              '${widget.index}° pagina',
+              '  ${widget.index}° pagina',
               style: const TextStyle(
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
-                fontSize: 16.0,
+                color: Colors.white,
               ),
             ),
             Image.network(

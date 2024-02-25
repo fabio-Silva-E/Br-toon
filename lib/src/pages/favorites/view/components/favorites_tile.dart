@@ -1,3 +1,6 @@
+import 'package:brasiltoon/src/constants/border_radius.dart';
+import 'package:brasiltoon/src/pages/common_widgets/card_widgest.dart';
+import 'package:brasiltoon/src/pages/common_widgets/showOrderConfirmation_widgest.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:brasiltoon/src/config/custom_colors.dart';
@@ -33,7 +36,11 @@ class _FavoritesTileState extends State<FavoritesTile> {
                   item: widget.favoritesItem.item,
                 ));
           },
-          child: Card(
+          child: CustomCardWidget(
+            imageUrl: widget.favoritesItem.item.imgUrl,
+            itemName: widget.favoritesItem.item.itemName,
+          ),
+/* Card(
             elevation: 3,
             shadowColor: Colors.grey.shade100,
             shape: RoundedRectangleBorder(
@@ -67,7 +74,7 @@ class _FavoritesTileState extends State<FavoritesTile> {
                 ],
               ),
             ),
-          ),
+          ),*/
         ),
         //botão desfavoritar
         Positioned(
@@ -76,7 +83,12 @@ class _FavoritesTileState extends State<FavoritesTile> {
           child: GestureDetector(
             onTap: () async {
               // Mostra a caixa de diálogo de confirmação
-              bool? confirmation = await showOrderComfirmation();
+              bool? confirmation =
+                  await ShowOrderConfirmation.showOrderConfirmation(
+                      context,
+                      'Deseja realmente desfavoritar este conteudo',
+                      'sim',
+                      'não');
               if (confirmation == true) {
                 // Chama a função remove apenas se a confirmação for verdadeira
                 setState(() {
@@ -85,14 +97,11 @@ class _FavoritesTileState extends State<FavoritesTile> {
               }
             },
             child: Container(
-              height: 40,
+              height: 35,
               width: 35,
               decoration: BoxDecoration(
                 color: CustomColors.customSwatchColor,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(15),
-                  topRight: Radius.circular(20),
-                ),
+                borderRadius: BorderRadius.circular(Border_Radius.circular),
               ),
               child: const Icon(
                 Icons.delete_forever,
@@ -103,40 +112,6 @@ class _FavoritesTileState extends State<FavoritesTile> {
           ),
         ),
       ],
-    );
-  }
-
-  Future<bool?> showOrderComfirmation() {
-    return showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: const Text('Comfirmação'),
-          content: const Text('Deseja realmente desfavoritar este conteudo'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-              child: const Text('não'),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              child: const Text('sim'),
-            ),
-          ],
-        );
-      },
     );
   }
 }

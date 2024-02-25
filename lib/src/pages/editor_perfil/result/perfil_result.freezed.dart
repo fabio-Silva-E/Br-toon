@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'product_pages_chapter_result.dart';
+part of 'perfil_result.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,7 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$ProductPagesChapterResult<T> {
+mixin _$PerfilResult<T> {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(T data) success,
@@ -57,18 +57,16 @@ mixin _$ProductPagesChapterResult<T> {
 }
 
 /// @nodoc
-abstract class $ProductPagesChapterResultCopyWith<T, $Res> {
-  factory $ProductPagesChapterResultCopyWith(ProductPagesChapterResult<T> value,
-          $Res Function(ProductPagesChapterResult<T>) then) =
-      _$ProductPagesChapterResultCopyWithImpl<T, $Res,
-          ProductPagesChapterResult<T>>;
+abstract class $PerfilResultCopyWith<T, $Res> {
+  factory $PerfilResultCopyWith(
+          PerfilResult<T> value, $Res Function(PerfilResult<T>) then) =
+      _$PerfilResultCopyWithImpl<T, $Res, PerfilResult<T>>;
 }
 
 /// @nodoc
-class _$ProductPagesChapterResultCopyWithImpl<T, $Res,
-        $Val extends ProductPagesChapterResult<T>>
-    implements $ProductPagesChapterResultCopyWith<T, $Res> {
-  _$ProductPagesChapterResultCopyWithImpl(this._value, this._then);
+class _$PerfilResultCopyWithImpl<T, $Res, $Val extends PerfilResult<T>>
+    implements $PerfilResultCopyWith<T, $Res> {
+  _$PerfilResultCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -87,7 +85,7 @@ abstract class _$$SuccessImplCopyWith<T, $Res> {
 
 /// @nodoc
 class __$$SuccessImplCopyWithImpl<T, $Res>
-    extends _$ProductPagesChapterResultCopyWithImpl<T, $Res, _$SuccessImpl<T>>
+    extends _$PerfilResultCopyWithImpl<T, $Res, _$SuccessImpl<T>>
     implements _$$SuccessImplCopyWith<T, $Res> {
   __$$SuccessImplCopyWithImpl(
       _$SuccessImpl<T> _value, $Res Function(_$SuccessImpl<T>) _then)
@@ -117,7 +115,7 @@ class _$SuccessImpl<T> implements Success<T> {
 
   @override
   String toString() {
-    return 'ProductPagesChapterResult<$T>.success(data: $data)';
+    return 'PerfilResult<$T>.success(data: $data)';
   }
 
   @override
@@ -201,7 +199,7 @@ class _$SuccessImpl<T> implements Success<T> {
   }
 }
 
-abstract class Success<T> implements ProductPagesChapterResult<T> {
+abstract class Success<T> implements PerfilResult<T> {
   factory Success(final T data) = _$SuccessImpl<T>;
 
   T get data;
@@ -221,7 +219,7 @@ abstract class _$$ErrorImplCopyWith<T, $Res> {
 
 /// @nodoc
 class __$$ErrorImplCopyWithImpl<T, $Res>
-    extends _$ProductPagesChapterResultCopyWithImpl<T, $Res, _$ErrorImpl<T>>
+    extends _$PerfilResultCopyWithImpl<T, $Res, _$ErrorImpl<T>>
     implements _$$ErrorImplCopyWith<T, $Res> {
   __$$ErrorImplCopyWithImpl(
       _$ErrorImpl<T> _value, $Res Function(_$ErrorImpl<T>) _then)
@@ -251,7 +249,7 @@ class _$ErrorImpl<T> implements Error<T> {
 
   @override
   String toString() {
-    return 'ProductPagesChapterResult<$T>.error(message: $message)';
+    return 'PerfilResult<$T>.error(message: $message)';
   }
 
   @override
@@ -334,7 +332,7 @@ class _$ErrorImpl<T> implements Error<T> {
   }
 }
 
-abstract class Error<T> implements ProductPagesChapterResult<T> {
+abstract class Error<T> implements PerfilResult<T> {
   factory Error(final String message) = _$ErrorImpl<T>;
 
   String get message;

@@ -1,16 +1,16 @@
+import 'package:brasiltoon/src/pages/auth/controller/auth_controller.dart';
 import 'package:get/get.dart';
 import 'package:brasiltoon/src/models/chapter_models.dart';
 import 'package:brasiltoon/src/models/item_models.dart';
-import 'package:brasiltoon/src/pages/screen/Product_pages/controller/product_pages_chapter_controller.dart';
-import 'package:brasiltoon/src/pages/screen/Product_pages/product_screen.dart';
 import 'package:brasiltoon/src/pages/screen/produt_chapter/repository/product_chapter_repository.dart';
 import 'package:brasiltoon/src/pages/screen/produt_chapter/result/product_chapter_result.dart';
 import 'package:brasiltoon/src/services/util_services.dart';
 
-const int itemsPerpage = 6;
+int itemsPerpage = 0;
 
 class ProductChapterController extends GetxController {
   final utilsServices = UtilsServices();
+  final authController = Get.find<AuthController>();
 
   final productChapterRepository = ProductChapterRepository();
   List<ChapterItemModel> get allChapters => currentProduct?.chapters ?? [];
@@ -36,7 +36,7 @@ class ProductChapterController extends GetxController {
     getAllProductId();
   }
 
-  void onChapterSelected(String chapterId, ItemModel item) {
+  /* void onChapterSelected(String chapterId, ItemModel item) {
     // Faça o que for necessário com o ID do capítulo e o item selecionado
     // por exemplo, navegar para ProductScreen e passar as informações necessárias
     Get.to(
@@ -50,7 +50,7 @@ class ProductChapterController extends GetxController {
     }));
     Get.find<ProductPagesChapterController>().getAllPages(chapterId);
   }
-
+*/
 /*  void selectChapter(ChapterItemModel chapter) {
     currentChapter = chapter;
     update();
@@ -87,6 +87,8 @@ class ProductChapterController extends GetxController {
   }
 
   Future<void> getAllChapter(String productId) async {
+    int chapterCount = await getChapterPages(productId);
+    itemsPerpage = chapterCount;
     setLoading(true, isChapter: true);
     Map<String, dynamic> body = {
       'page': currentProduct!.pagination,
@@ -111,5 +113,26 @@ class ProductChapterController extends GetxController {
         );
       },
     );
+  }
+
+  Future<int> getChapterPages(String productId) async {
+    setLoading(true, isChapter: true);
+
+    int result = await productChapterRepository.chapterCount(
+      user: authController.user.id!,
+      token: authController.user.token!,
+      productId: productId,
+    );
+
+    setLoading(false, isChapter: true);
+
+    int chapterCount = 0; // Valor padrão
+
+    // Atribua diretamente o valor retornado do método pagesCount à pageCount
+    chapterCount = result;
+
+    // Não é necessário usar productPagesChapterResult.when para um tipo int
+    // print(chapterCount);
+    return chapterCount; // Retorne 'pageCount' após o tratamento do resultado
   }
 }

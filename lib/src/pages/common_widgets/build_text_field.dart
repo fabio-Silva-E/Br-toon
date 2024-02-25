@@ -1,38 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class CustomTextField extends StatefulWidget {
+class BuildTextField extends StatefulWidget {
   final IconData icon;
   final String label;
   final bool isSecret;
   final List<TextInputFormatter>? inputFormatters;
   final String? initialValue;
-  final bool readeOnly;
+  final bool readOnly;
   final String? Function(String?)? validator;
   final void Function(String?)? onSaved;
   final TextEditingController? controller;
-  final TextInputType? textInputType;
+
   final GlobalKey<FormFieldState>? formFieldkey;
-  const CustomTextField({
+  const BuildTextField({
     super.key,
     required this.icon,
     required this.label,
     this.isSecret = false,
     this.inputFormatters,
     this.initialValue,
-    this.readeOnly = false,
+    this.readOnly = false,
     this.validator,
     this.controller,
-    this.textInputType,
     this.onSaved,
     this.formFieldkey,
   });
 
   @override
-  State<CustomTextField> createState() => _CustomTextFieldState();
+  State<BuildTextField> createState() => _BuildTextFieldState();
 }
 
-class _CustomTextFieldState extends State<CustomTextField> {
+class _BuildTextFieldState extends State<BuildTextField> {
   bool isObscure = false;
 
   @override
@@ -47,15 +46,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: TextFormField(
-        key: widget.formFieldkey,
-        controller: widget.controller,
-        readOnly: widget.readeOnly,
+        readOnly: widget.readOnly,
         initialValue: widget.initialValue,
-        inputFormatters: widget.inputFormatters,
         obscureText: isObscure,
-        validator: widget.validator,
-        onSaved: widget.onSaved,
-        keyboardType: widget.textInputType,
+        controller: widget.controller,
         decoration: InputDecoration(
           prefixIcon: Icon(widget.icon),
           suffixIcon: widget.isSecret
@@ -71,10 +65,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
               : null,
           labelText: widget.label,
           labelStyle: const TextStyle(
-            fontSize: 16,
             // Define o estilo do texto da label
+            fontSize: 16,
             color: Colors.white,
-            fontWeight: FontWeight.bold, // Define a cor do texto da label
+            fontWeight: FontWeight.bold,
+            overflow: TextOverflow.visible, // Define a cor do texto da label
           ),
           isDense: true,
           filled: true,

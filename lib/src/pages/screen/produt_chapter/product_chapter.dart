@@ -1,4 +1,5 @@
-import 'package:brasiltoon/src/pages/screen/Product_pages/product_screen.dart';
+import 'package:brasiltoon/src/config/custom_colors.dart';
+import 'package:brasiltoon/src/pages/screen/components/chapter_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:brasiltoon/src/models/chapter_models.dart';
@@ -20,7 +21,7 @@ class ProductChapter extends StatefulWidget {
 
 class _ProductChapterState extends State<ProductChapter> {
   late List<PagesChapterItemModel> pagesList;
-
+  late bool _isLoading;
   late ChapterItemModel selectedChapter;
   late ProductChapterController productChapterController;
   final ProductChapterController controller =
@@ -29,54 +30,77 @@ class _ProductChapterState extends State<ProductChapter> {
   @override
   void initState() {
     super.initState();
-
-    controller.getAllChapter(widget.productId);
+    _isLoading = true;
+    controller.getAllChapter(widget.productId).then((_) {
+      setState(() {
+        _isLoading =
+            false; // Quando os dados carregarem, altera o estado de carregamento
+      });
+    });
   }
+
+// Função para carregar os capítulos de forma assíncrona
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.item.itemName),
+        backgroundColor: Colors.black,
+        title: Text(
+          widget.item.itemName,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
       ),
-      body: GetBuilder<ProductChapterController>(
-        builder: (controller) {
-          return ListView.builder(
-            itemCount: controller.allChapters.length,
-            itemBuilder: (context, index) {
-              ChapterItemModel chapter = controller.allChapters[index];
-
-              return GestureDetector(
-                onTap: () {
-                  Get.to(() => ProductScreen(
-                        chapterId: chapter.id,
+      backgroundColor: Colors.black,
+      body: _isLoading // Verifica se está carregando
+          ? const Center(
+              child:
+                  CircularProgressIndicator(), // Mostra o indicador de carregamento
+            )
+          : Column(children: [
+              // Lista de itens do carrinho
+              Expanded(
+                child:
+                    GetBuilder<ProductChapterController>(builder: (controller) {
+                  if (controller.allChapters.isEmpty) {
+                    return Center(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.search_off,
+                              size: 40,
+                              color: CustomColors.customSwatchColor,
+                            ),
+                            const Text(
+                              'Não a capitulos postados',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ]),
+                    );
+                  }
+                  return ListView.builder(
+                    itemCount: controller.allChapters.length,
+                    itemBuilder: (_, index) {
+                      return ChapterTile(
+                        chapter: controller.allChapters[index],
+                        productId: widget.productId,
                         item: widget.item,
-                      ));
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        'Capítulo ${index + 1} - ${chapter.nameChapter}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      Image.network(
-                        chapter.chaptersUrls,
-                        fit: BoxFit.cover,
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        },
-      ),
+                        index: index + 1,
+                      );
+                    },
+                  );
+                }),
+              ),
+            ]),
     );
   }
 }

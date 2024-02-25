@@ -63,7 +63,7 @@ class _SelectChapterTileState extends State<SelectChapterTile> {
             ),
           ),
           subtitle: Text(
-            '${widget.index}° capitulo',
+            '  ${widget.index}° capitulo',
             style: const TextStyle(
               color: Colors.black54,
               fontWeight: FontWeight.bold,

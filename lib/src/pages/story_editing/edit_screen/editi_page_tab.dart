@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:brasiltoon/src/models/pages_chapters_models.dart';
+import 'package:brasiltoon/src/pages/common_widgets/showOrderConfirmation_widgest.dart';
 import 'package:brasiltoon/src/pages/story_editing/controller/editing_controller.dart';
 import 'package:brasiltoon/src/services/util_services.dart';
 import 'package:flutter/foundation.dart';
@@ -55,9 +56,17 @@ class _EditingPageTabState extends State<EditingPageTab> {
     // double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Editar pagina'),
+        backgroundColor: Colors.black,
+        title: const Text(
+          'Editar pagina',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
       ),
-      backgroundColor: Colors.white.withAlpha(250),
+      backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -105,8 +114,16 @@ class _EditingPageTabState extends State<EditingPageTab> {
                           onPressed: editingControler.isLoading.value
                               ? null
                               : () async {
-                                  bool? result = await showOrderConfirmation();
+                                  bool? result = await ShowOrderConfirmation
+                                      .showOrderConfirmation(
+                                          context,
+                                          'dejesa continuar esta ação!',
+                                          'sim',
+                                          'não');
                                   if (result ?? false) {
+                                    editingControler.editePage(
+                                      pageId: widget.pageId,
+                                    );
                                     if (imageFile != null) {
                                       await editingControler.editeImage(
                                           caminho, File(imageFile!.path));
@@ -114,7 +131,6 @@ class _EditingPageTabState extends State<EditingPageTab> {
                                   } else {
                                     utilsServices.showToast(
                                       message: 'Atualizção não concluida',
-                                      isError: true,
                                     );
                                   }
                                 },
@@ -147,39 +163,5 @@ class _EditingPageTabState extends State<EditingPageTab> {
     } catch (e) {
       print(e);
     }
-  }
-
-  Future<bool?> showOrderConfirmation() {
-    return showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: const Text('Comfirmação'),
-          content: const Text('Deseja realmente comfirmar a alteração'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-              child: const Text('não'),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              child: const Text('sim'),
-            ),
-          ],
-        );
-      },
-    );
   }
 }
