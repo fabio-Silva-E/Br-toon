@@ -140,7 +140,7 @@ class AuthController extends GetxController {
     result.when(
       success: (user) {
         utilsServices.showToast(
-          message: 'cadastro realizado com sucesso prossiga com o login',
+          message: 'cadastro realizado ',
         );
         /*  signIn(email: this.user.email!, password: this.user.password!);
         // Get.offAllNamed(PagesRoutes.signInRoute);*/
@@ -263,7 +263,11 @@ class AuthController extends GetxController {
       final ParseResponse response = await gallery.save();
 
       if (response.success) {
-        print('Arquivo sobrescrito com sucesso.');
+        user.userphoto?.file = parseFile.url!;
+        utilsServices.showToast(
+          message: 'foto de perfil alterada',
+        );
+        await reloadProfile();
       } else {
         utilsServices.showToast(
           message: 'Erro durante a modificação da imagem',
@@ -273,6 +277,12 @@ class AuthController extends GetxController {
     } finally {
       isLoading.value =
           false; // Define isLoading como falso somente após todas as operações
+    }
+  }
+
+  Future<void> reloadProfile() async {
+    if (user.id != null) {
+      await perfil(user.id!);
     }
   }
 }

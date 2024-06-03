@@ -1,7 +1,13 @@
 import 'package:brasiltoon/src/constants/border_radius.dart';
+import 'package:brasiltoon/src/models/follow_editor_models.dart';
+import 'package:brasiltoon/src/models/user_models.dart';
+import 'package:brasiltoon/src/pages/auth/controller/auth_controller.dart';
 import 'package:brasiltoon/src/pages/common_widgets/card_widgest.dart';
+import 'package:brasiltoon/src/pages/common_widgets/like_button.dart';
 import 'package:brasiltoon/src/pages/common_widgets/showOrderConfirmation_widgest.dart';
+import 'package:brasiltoon/src/pages/editor_perfil/controller/perfil_controller.dart';
 import 'package:brasiltoon/src/pages/home/controller/home_controller.dart';
+import 'package:brasiltoon/src/pages/likes/controller/like_controller.dart';
 import 'package:brasiltoon/src/pages/profile/editor_profile_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,14 +19,13 @@ import 'package:brasiltoon/src/services/util_services.dart';
 
 class ItemTile extends StatefulWidget {
   final ItemModel item;
-  //final List<ItemModel> categoryItems;
   final void Function(GlobalKey) favoritesAnimationMethod;
-
-  // final CategoryModel category;
+  // final bool follow;
   const ItemTile({
     Key? key,
     required this.item,
     required this.favoritesAnimationMethod,
+    // required this.follow,
   }) : super(key: key);
 
   @override
@@ -31,19 +36,30 @@ class _ItemTileState extends State<ItemTile> {
   final GlobalKey imageGk = GlobalKey();
   late void Function(GlobalKey) favoritesAnimationMethod;
   late bool isFavorite;
-  bool isCheckingFavorite =
-      true; // Adiciona uma variável para rastrear o estado de checagem
-  bool showFavoriteButton =
-      false; // Adiciona uma variável para determinar se o botão deve ser exibido
+
+  final authController = Get.find<AuthController>();
+  bool isCheckingFavorite = true;
+  bool showFavoriteButton = false;
+  final LikeController likeController =
+      Get.put(LikeController()); // Mova o controlador aqui
 
   final UtilsServices utilServices = UtilsServices();
   final favoritesController = Get.find<FavoritesController>();
   IconData tileIcon = Icons.library_add;
   final homeController = Get.find<HomeController>();
+  final PerfilController perfilController = Get.put(PerfilController());
   @override
   void initState() {
     super.initState();
     _checkIsFavorite();
+
+    // _initializeLikeController(); // Inicializa o controlador de like
+  }
+
+  Future<void> _initializeLikeController() async {
+    await likeController.checkLikeStatus(
+        widget.item.id, authController.user.id!);
+    await likeController.getLikeCount(widget.item.id);
   }
 
   @override
@@ -51,23 +67,20 @@ class _ItemTileState extends State<ItemTile> {
     super.didUpdateWidget(oldWidget);
     if (widget.item != oldWidget.item) {
       _checkIsFavorite();
+      //   _initializeLikeController(); // Atualiza o controlador de like
     }
   }
 
   Future<void> _checkIsFavorite() async {
-    // Define o estado para mostrar o indicador de carregamento
     setState(() {
       isCheckingFavorite = true;
     });
 
     bool isItemFavorite = await favoritesController.isItemFavorite(widget.item);
 
-    // Atualiza o estado após a conclusão da verificação
     setState(() {
       isCheckingFavorite = false;
-      // Define o estado para mostrar ou ocultar o botão favorito com base no resultado da verificação
-      showFavoriteButton =
-          !isItemFavorite; // Exibe o botão se o item não for favorito
+      showFavoriteButton = !isItemFavorite;
     });
   }
 
@@ -78,18 +91,15 @@ class _ItemTileState extends State<ItemTile> {
   }
 
   Future<void> _addToFavorites(ItemModel item) async {
-    // Define o estado para mostrar o indicador de carregamento
     setState(() {
       isCheckingFavorite = true;
     });
 
     await favoritesController.addItemToFavorites(item: item);
-    // await favoritesController.updateFavoritesCount();
-    // Atualiza o estado após a conclusão da operação de adição aos favoritos
+
     setState(() {
       isFavorite = true;
       isCheckingFavorite = false;
-      // Define o estado para ocultar o botão favorito após a adição bem-sucedida
       showFavoriteButton = false;
     });
 
@@ -114,8 +124,6 @@ class _ItemTileState extends State<ItemTile> {
           ),
         ),
         if (showFavoriteButton)
-
-          // Verifica se o botão deve ser exibido
           Positioned(
             top: 4,
             right: 4,
@@ -127,7 +135,6 @@ class _ItemTileState extends State<ItemTile> {
                     child: InkWell(
                       onTap: () {
                         switchIcon();
-                        // Executa a função de adição aos favoritos
                         _addToFavorites(widget.item);
                       },
                       child: Ink(
@@ -168,6 +175,24 @@ class _ItemTileState extends State<ItemTile> {
               ],
             ),
           ),
+        //likes da historia
+        Positioned(
+          bottom: 35,
+          right: 4,
+          child: Container(
+            height: 35,
+            constraints: const BoxConstraints(maxWidth: 200), // Max width
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            decoration: BoxDecoration(
+              color: CustomColors.customSwatchColor,
+              borderRadius: BorderRadius.circular(Border_Radius.circular),
+            ),
+            child: LikeButton(
+              post: widget.item.id,
+              userId: authController.user.id!,
+            ),
+          ),
+        ),
         //perfil do editor
         Positioned(
           bottom: 34,
@@ -176,8 +201,8 @@ class _ItemTileState extends State<ItemTile> {
             onTap: () async {
               Get.to(() => PerfilTab(
                     userId: widget.item.userId!.id!,
+                    // follow: widget.follow,
                   ));
-              // print('file ${widget.item.imgUrl.file}');
             },
             child: Container(
               height: 35,
@@ -201,9 +226,9 @@ class _ItemTileState extends State<ItemTile> {
             onTap: () async {
               bool? result = await ShowOrderConfirmation.showOrderConfirmation(
                 context,
-                ' todos os capitulos e paginas desta historia serão selecionados comfirmar download ?',
-                'sim',
-                'não',
+                'Todos os capítulos e páginas desta história serão selecionados. Confirmar download?',
+                'Sim',
+                'Não',
               );
               if (result ?? false) {
                 homeController.downloadAllChaptersAndPages(item: widget.item);

@@ -1,5 +1,6 @@
 import 'package:add_to_cart_animation/add_to_cart_animation.dart';
 import 'package:add_to_cart_animation/add_to_cart_icon.dart';
+import 'package:brasiltoon/src/pages/editor_perfil/controller/perfil_controller.dart';
 import 'package:brasiltoon/src/pages/home/view/components/item_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,6 +33,8 @@ class _HomeTabState extends State<HomeTab> {
 
     ultilsServices.showToast(message: ' adicionado aos seus favoritos');
   }
+
+  final PerfilController perfilController = Get.put(PerfilController());
 
   final UtilsServices ultilsServices = UtilsServices();
   /* @override
@@ -249,9 +252,11 @@ class _HomeTabState extends State<HomeTab> {
                                 }
 
                                 return ItemTile(
-                                    item: controller.allProducts[index],
-                                    favoritesAnimationMethod:
-                                        itemSelectedFavoritesAnimentinos);
+                                  item: controller.allProducts[index],
+                                  favoritesAnimationMethod:
+                                      itemSelectedFavoritesAnimentinos,
+                                  // follow: perfilController.isFollowing.value,
+                                );
                               },
                             ),
                           )

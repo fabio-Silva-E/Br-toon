@@ -11,17 +11,17 @@ void main() async {
   Get.put(AuthController());
 
   WidgetsFlutterBinding.ensureInitialized();
-  const keyApplicationId = //'yourAppId';
-      "H13T1aiOUr09EFLEcNTWgpUZsVhf2b0hsogOQZim"; //'yourAppId';
-  const keyClientKey = //'yourMasterKey';
-      'zMKV2c3Fh8fLG51ufUNH7Bkh6Wmphq9sVh1m0a6i'; //'yourMasterKey';
+  const keyApplicationId = 'yourAppId';
+  //"H13T1aiOUr09EFLEcNTWgpUZsVhf2b0hsogOQZim"; //'yourAppId';
+  const keyClientKey = 'yourMasterKey';
+  //   'zMKV2c3Fh8fLG51ufUNH7Bkh6Wmphq9sVh1m0a6i'; //'yourMasterKey';
   const keyParseServerUrl =
-      //  'https://terrier-equipped-supposedly.ngrok-free.app/parse/';
-      'https://parseapi.back4app.com';
-  // 'http://localhost:1337/parse';
+      // 'https://terrier-equipped-supposedly.ngrok-free.app/parse/';
+      // 'https://parseapi.back4app.com';
+      'http://localhost:1337/parse';
   try {
     await Parse().initialize(keyApplicationId, keyParseServerUrl,
-        clientKey: keyClientKey, debug: true);
+        masterKey: keyClientKey, debug: true);
   } catch (e) {
     print('Erro durante a inicialização do parse: $e');
   }

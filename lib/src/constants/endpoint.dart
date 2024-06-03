@@ -1,7 +1,7 @@
-const String baseUrl = 'https://parseapi.back4app.com/functions';
+//const String baseUrl = 'https://parseapi.back4app.com/functions';
 //const String baseUrl =
-//  'https://terrier-equipped-supposedly.ngrok-free.app/parse/functions';
-//const String baseUrl = 'http://localhost:1337/parse/functions';
+//   'https://terrier-equipped-supposedly.ngrok-free.app/parse/functions';
+const String baseUrl = 'http://localhost:1337/parse/functions';
 
 abstract class Endpoints {
   static const String perfil = '$baseUrl/perfil';
@@ -43,4 +43,12 @@ abstract class Endpoints {
   static const String deleteChapter = '$baseUrl/delete-chapter';
   static const String deleteStory = '$baseUrl/delete-story';
   static const String deletePage = '$baseUrl/delete-page';
+  static const String follow = '$baseUrl/follow-editor';
+  static const String unfollow = '$baseUrl/unfollow-editor';
+  static const String like = '$baseUrl/likePost';
+  static const String unlike = '$baseUrl/unlikePost';
+  static const String getLikeCount = '$baseUrl/getLikeCount';
+  static const String isLikedByUser = '$baseUrl/isLikedByUser';
+  static const String checkIfFollowing = '$baseUrl/checkIfFollowing';
+  static const String abstractId = '$baseUrl/abstractId';
 }

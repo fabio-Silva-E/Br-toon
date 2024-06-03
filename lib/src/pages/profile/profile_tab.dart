@@ -22,6 +22,7 @@ class ProfileTab extends StatefulWidget {
 
 class _ProfileTabState extends State<ProfileTab> {
   final imagePicker = ImagePicker();
+  XFile? imageFile;
   ImageProvider? getBackgroundImage() {
     if (imageFile != null) {
       if (kIsWeb) {
@@ -36,7 +37,6 @@ class _ProfileTabState extends State<ProfileTab> {
     }
   }
 
-  XFile? imageFile;
   final authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
@@ -110,14 +110,14 @@ class _ProfileTabState extends State<ProfileTab> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  onPressed: authController.setLoading.value
+                  onPressed: authController.isLoading.value
                       ? null
                       : () async {
                           await authController.overwriteFileInGallery(
                               objectId: authController.user.userphoto!.id,
                               newFile: imageFile!);
                         },
-                  child: authController.setLoading.value
+                  child: authController.isLoading.value
                       ? const CircularProgressIndicator()
                       : const Text('Atualizar foto'),
                 )),

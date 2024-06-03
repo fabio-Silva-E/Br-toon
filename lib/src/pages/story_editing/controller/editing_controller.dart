@@ -2,8 +2,12 @@ import 'dart:io';
 
 import 'package:brasiltoon/src/models/category_model.dart';
 import 'package:brasiltoon/src/pages/auth/controller/auth_controller.dart';
+import 'package:brasiltoon/src/pages/home/controller/home_controller.dart';
+import 'package:brasiltoon/src/pages/publishers/controller/publishers_contoller.dart';
 import 'package:brasiltoon/src/pages/screen/Product_pages/controller/product_pages_chapter_controller.dart';
 import 'package:brasiltoon/src/pages/screen/produt_chapter/controller/product_chapter_controller.dart';
+import 'package:brasiltoon/src/pages/splash/splash_screen.dart';
+import 'package:brasiltoon/src/pages/story_editing/edit_screen/select_chapter_to_editing_tab.dart';
 import 'package:brasiltoon/src/pages/story_editing/repository/editing_repository.dart';
 import 'package:brasiltoon/src/pages/story_editing/result/editi_result.dart';
 import 'package:brasiltoon/src/services/util_services.dart';
@@ -14,16 +18,18 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 class EditingController extends GetxController {
   RxBool isLoading = false.obs;
-  // final homeController = Get.find<HomeController>();
+  final homeController = Get.find<HomeController>();
   final pagecontroller = Get.find<ProductPagesChapterController>();
   final chaptercontroller = Get.find<ProductChapterController>();
   final utilsServices = UtilsServices();
   final editingRepository = EditingRepository();
   final authController = Get.find<AuthController>();
+  final publisherController = Get.find<PublisherController>();
 
   List<CategoryModel> allCategories = [];
   CategoryModel? currentCategory;
   String? selectedCategoryId;
+  String? updatedImagePath;
   @override
   void onInit() {
     super.onInit();
@@ -86,7 +92,8 @@ class EditingController extends GetxController {
       final ParseResponse response = await gallery.save();
 
       if (response.success) {
-        print('Arquivo sobrescrito com sucesso.');
+        Get.to(() => const SplashScreen());
+        update();
       } else {
         utilsServices.showToast(
           message: 'Erro durante a modificação da imagem',
@@ -130,6 +137,8 @@ class EditingController extends GetxController {
 
       if (response.success) {
         print('Arquivo sobrescrito com sucesso.');
+        /*  Get.to(() => const SplashScreen());
+        update();*/
       } else {
         utilsServices.showToast(
           message: 'Erro durante a modificação da imagem',
@@ -173,6 +182,9 @@ class EditingController extends GetxController {
 
       if (response.success) {
         print('Arquivo sobrescrito com sucesso.');
+
+        Get.to(() => const SplashScreen());
+        update();
       } else {
         utilsServices.showToast(
           message: 'Erro durante a modificação da imagem',
@@ -215,8 +227,6 @@ class EditingController extends GetxController {
 
     isLoading.value = false;
     result.when(success: (data) {
-      // homeController.getAllProducts();
-
       // Se a operação foi bem-sucedida, você pode prosseguir com outras ações
       utilsServices.showToast(
         message:
